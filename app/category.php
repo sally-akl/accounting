@@ -15,4 +15,13 @@ class category extends Model
      {
          return $this->hasMany('App\major');
      }
+
+     public function branch()
+     {
+         return $this->belongsTo('App\branch');
+     }
+     public function users()
+     {
+         return $this->belongsTo('App\User',"user_id");
+     }
 }

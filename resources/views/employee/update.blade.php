@@ -2,154 +2,124 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.update_employee')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> <i class="far fa-edit"></i> @lang('app.update_employee')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action='{{url("employee/{$employee->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																                         @csrf
 
 
-                            @include("utility.error_messages")
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_name') </label>
+																															 <div class="col-sm-9">
+																																	 <input id="inputHorizontalSuccess" name= "name"  placeholder="{{ __('app.enter_employee_name') }}" class="form-control form-control-success" type="text" value="{{$employee->employee_name}}">
+																															 </div>
+																													 </div>
+
+																													 <div class="form-group row">
+																																	 <label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_email') </label>
+																																	 <div class="col-sm-9">
+																																			 <input id="inputHorizontalSuccess" name= "employee_email"  placeholder="{{ __('app.enter_employee_email') }}" class="form-control form-control-success" type="text" value="{{$employee->employee_email}}">
+																																	 </div>
+																															 </div>
+
+																															 <div class="form-group row">
+																																			 <label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_address') </label>
+																																			 <div class="col-sm-9">
+																																					 <input id="inputHorizontalSuccess" name= "address"  placeholder="{{ __('app.enter_employee_address') }}" class="form-control form-control-success" type="text" value="{{$employee->employee_address}}">
+																																			 </div>
+																																	 </div>
+
+																																	 <div class="form-group row">
+																																					 <label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_phone') </label>
+																																					 <div class="col-sm-9">
+																																							 <input id="inputHorizontalSuccess" name= "phone"  placeholder="{{ __('app.enter_employee_phone') }}" class="form-control form-control-success" type="text" value="{{$employee->employee_phone}}">
+																																					 </div>
+																																			 </div>
+
+																																			 <div class="form-group row">
+																																					 <label class="col-sm-3 form-control-label label-sm">	@lang('app.employee_status')</label>
+																																					 <div class="col-sm-9">
+																																							 <select name="status" class="form-control">
+																																								 <option value="1" {{$employee->employee_status == 1 ?"selected":""}}>Active</option>
+																																						     <option value="2" {{$employee->employee_status == 2 ?"selected":""}}>Not active</option>
+																																							 </select>
+
+																																					 </div>
+																																	     </div>
+
+																																			 <div class="form-group row">
+																																							<label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_join_data') </label>
+																																							<div class="col-sm-9">
+																																									<input id="inputHorizontalSuccess" name= "join_date"  placeholder="{{ __('app.enter_employee_join_date') }}" class="form-control form-control-success" type="date" value="{{date('Y-m-d',strtotime($employee->employee_join_date))}}">
+																																							</div>
+																																					</div>
+
+																																					<div class="form-group row">
+	 																																							<label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_details') </label>
+	 																																							<div class="col-sm-9">
+	 																																								 <textarea rows="10" cols="70" name="details">{{$employee->employee_details}}</textarea>
+	 																																					</div>
+																																						</div>
+
+																																						<div class="form-group row">
+																																								<label class="col-sm-3 form-control-label label-sm">	@lang('app.job_title')</label>
+																																								<div class="col-sm-9">
+																																										<select name="job_title" class="form-control">
+																																											@foreach($jobs as $job)
+																																												<option value="{{$job->id}}" {{$employee->job_id == $job->id ?"selected":""}}>{{$job->title}}({{$job->job_code}})</option>
+																																											@endforeach
 
 
-                              <form method="POST" action='{{url("employee/{$employee->id}")}}'>
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-																																	<div class="form-group m-form__group">
-	                                                                    <label for="exampleInputEmail1">
-	                                                                      @lang('app.employee_name')  :
-	                                                                    </label>
-	                                                                    <input type="text"  name= "name" class="form-control m-input" placeholder="{{ __('app.enter_employee_name') }}" value="{{$employee->employee_name}}">
+																																										</select>
 
-	                                                                </div>
-
-																																	<div class="form-group m-form__group">
-	                                                                    <label for="exampleInputEmail1">
-	                                                                      @lang('app.employee_email')  :
-	                                                                    </label>
-	                                                                    <input type="text"  name= "employee_email" class="form-control m-input" placeholder="{{ __('app.enter_employee_email') }}" value="{{$employee->employee_email}}">
-
-	                                                                </div>
-
-																																	<div class="form-group m-form__group">
-	                                                                    <label for="exampleInputEmail1">
-	                                                                      @lang('app.employee_address')  :
-	                                                                    </label>
-	                                                                    <input type="text"  name= "address" class="form-control m-input" placeholder="{{ __('app.enter_employee_address') }}" value="{{$employee->employee_address}}">
-
-	                                                                </div>
-
-																																	<div class="form-group m-form__group">
-	                                                                    <label for="exampleInputEmail1">
-	                                                                      @lang('app.employee_phone')  :
-	                                                                    </label>
-	                                                                    <input type="text"  name= "phone" class="form-control m-input" placeholder="{{ __('app.enter_employee_phone') }}" value="{{$employee->employee_phone}}">
-
-	                                                                </div>
+																																								</div>
+																																						</div>
 
 
-																																	<div class="form-group m-form__group">
-																																			<label for="exampleInputEmail1">
-																																				@lang('app.employee_status')  :
-																																			</label>
-																																			<select class="form-control m-input" name="status">
-																																						<option value="1" {{$employee->employee_status == 1 ?"selected":""}}>Active</option>
-																																						<option value="2" {{$employee->employee_status == 2 ?"selected":""}}>Not active</option>
-																																			</select>
+																																						@if(is_int($branches))
+																																							<input type="hidden" name="branch_name" value="{{$employee->branch_id}}" />
 
-																																	</div>
+																																							 @else
 
-																																	<div class="form-group m-form__group">
-																																			<label for="exampleInputEmail1">
-																																				@lang('app.employee_join_data')  :
-																																			</label>
-
-																																			<input type="text"  name= "join_date" class="form-control m-input" value="{{date('Y-m-d',strtotime($employee->employee_join_date))}}" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_employee_join_date') }}">
-
-																																	</div>
+																																							 <div class="form-group row">
+																																												<label class="col-sm-3 form-control-label label-sm">@lang('app.branch_name')</label>
+																																												<div class="col-sm-9">
+																																										<select name="branch_name" class="form-control">
 
 
-																																	<div class="form-group m-form__group">
-																																			<label for="exampleInputEmail1">
-																																				@lang('app.employee_details')  :
-																																			</label>
-																																		   <textarea rows="10" cols="70" name="details">{{$employee->employee_details}}</textarea>
-																																	</div>
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.update_employee') }}">
+																																																 @foreach ($branches as $key => $branch)
+																																																	 <option value="{{$branch->id}}" {{$employee->branch_id == $branch->id ?"selected":""}}>{{$branch->branch_title}}</option>
+																																																 @endforeach
+
+																																											</select>
+																																											</div>
+																																									</div>
+
+																																							 @endif
+																																						<input type="hidden" name="where_from"/>
 
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
+																									 <button type="submit" class="btn btn-primary">{{ __('app.update_employee') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-                                                          </form>
-
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-@endsection
-
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_employee')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/employee")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.employee')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("employee/{$employee->id}/edit")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.update_employee')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
-
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 @endsection

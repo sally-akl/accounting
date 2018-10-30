@@ -20,7 +20,6 @@ class city extends Model
     {
          return $this->belongsTo('App\country');
     }
-
-
+    
 
 }

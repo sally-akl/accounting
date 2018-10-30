@@ -1,127 +1,211 @@
 @include('layouts.header')
 
-	<!-- begin::Body -->
-	<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
-  <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-	<script src="{{ asset('js/ckeditor.js') }}"></script>
-		<!-- begin:: Page -->
-		<div class="m-grid m-grid--hor m-grid--root m-page">
+<body>
 
-			<!-- BEGIN: Header -->
-			<header id="m_header" class="m-grid__item    m-header " m-minimize-offset="200" m-minimize-mobile-offset="200">
-				<div class="m-container m-container--fluid m-container--full-height">
-					<div class="m-stack m-stack--ver m-stack--desktop">
-
-						<!-- BEGIN: Brand -->
-						<div class="m-stack__item m-brand  m-brand--skin-dark ">
-							<div class="m-stack m-stack--ver m-stack--general">
-								<div class="m-stack__item m-stack__item--middle m-brand__logo">
-									<a href="index.html" class="m-brand__logo-wrapper">
-										<img alt="" src="assets/media/img/logo/logoIbtikarats.png"/>
-									</a>
-								</div>
-								<div class="m-stack__item m-stack__item--middle m-brand__tools">
-									<!-- BEGIN: Left Aside Minimize Toggle -->
-									<a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler  m--visible-desktop-inline-block ">
-										<span></span>
-									</a>
-									<!-- END -->
-							<!-- BEGIN: Responsive Aside Left Menu Toggler -->
-									<a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
-										<span></span>
-									</a>
-									<!-- END -->
-			                 <!-- BEGIN: Topbar Toggler -->
-									<a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
-										<i class="fa fa-ellipsis-v"></i>
-									</a>
-									<!-- BEGIN: Topbar Toggler -->
-								</div>
-							</div>
-						</div>
-
-						<!-- END: Brand -->
-						<div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
-
-							<!-- BEGIN: Horizontal Menu -->
-							<button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
-								<i class="la la-close"></i>
-							</button>
-							<div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark ">
-                                <form action="" method="" >
-                                    <input type="text" name="" placeholder="Search something ..." class="inputSearchDashboard" />
-                                     <i class="fa fa-search" id="iconSearch"></i>
-                                </form>
-							</div>
-
-							<!-- END: Horizontal Menu -->
-
-							<!-- BEGIN: Topbar -->
-							<div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general m-stack--fluid">
-									<div class="m-stack__item m-topbar__nav-wrapper">
-
-                    @guest
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                        </li>
-                    @else
+  <div class="page">
+    <!-- Main Navbar-->
 
 
+		<header class="header">
+      <nav class="navbar">
+        <!-- Search Box-->
+        <div class="search-box">
+          <button class="dismiss">
+            <i class="icon-close"></i>
+          </button>
+          <form id="searchForm" action="#" role="search">
+            <input type="search" placeholder="What are you looking for..." class="form-control">
+          </form>
+        </div>
+        <div class="container-fluid">
+          <div class="navbar-holder d-flex align-items-center justify-content-between">
+            <!-- Navbar Header-->
+            <div class="navbar-header">
+              <!-- Navbar Brand -->
+              <a href="index.html" class="navbar-brand d-none d-sm-inline-block">
+                <div class="brand-text logo d-none d-lg-inline-block">
+                  <img src="{{ asset('img/logo.png') }}" alt="logo" class="img-fluid">
+                </div>
+                <div class="brand-text d-none d-sm-inline-block d-lg-none">
+                  <strong>ibtkarat</strong>
+                </div>
+              </a>
+              <!-- Toggle Button-->
+              <a id="toggle-btn" href="#" class="menu-btn active">
+                <span></span>
+                <span></span>
+                <span></span>
+              </a>
+            </div>
+            <!-- Navbar Menu -->
+            <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+              <!-- Search-->
+              <li class="nav-item d-flex align-items-center">
+                <a id="search" href="#">
+                  <i class="icon-search"></i>
+                </a>
+              </li>
+              <!-- Notifications-->
+              <li class="nav-item dropdown ring-not">
+              <!--  <a id="notifications"  rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  class="nav-link">
+                  <i class="fas fa-bell" style="font-size: 20px;"></i>
+                  <span class="badge bg-blue badge-corner">12</span>
+                </a>  -->
+                <ul aria-labelledby="notifications" class="dropdown-menu">
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item">
+                      <div class="notification">
+                        <div class="notification-content">
+                          <i class="fa fa-envelope bg-green"></i>You have 6 new messages </div>
+                        <div class="notification-time">
+                          <small>4 minutes ago</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item">
+                      <div class="notification">
+                        <div class="notification-content">
+                          <i class="fa fa-envelope bg-blue"></i>You have 2 followers</div>
+                        <div class="notification-time">
+                          <small>4 minutes ago</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item">
+                      <div class="notification">
+                        <div class="notification-content">
+                          <i class="fa fa-upload bg-orange"></i>Server Rebooted</div>
+                        <div class="notification-time">
+                          <small>4 minutes ago</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item">
+                      <div class="notification">
+                        <div class="notification-content">
+                          <i class="fa fa-envelope bg-blue"></i>You have 2 followers</div>
+                        <div class="notification-time">
+                          <small>10 minutes ago</small>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item all-notifications text-center">
+                      <strong>view all notifications </strong>
+                    </a>
+                  </li>
+                </ul>
+              </li>
 
-										<img src="assets/media/img/users/100_3.jpg" class="imageProfile" />
-										<p class="userProfile">{{ Auth::user()->name }}</p>
-										<span id="threeSpans">
-											<div class="dropdown dropdowndash">
-												<button class="buttonProfile la la-ellipsis-v" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												</button>
-												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="top-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 0px, 0px);">
 
-                          <a class="dropdown-item" href="{{ route('logout') }}"
-                             onclick="event.preventDefault();
-                                           document.getElementById('logout-form').submit();">
-                              {{ __('Logout') }}
-                          </a>
+              <li class="nav-item dropdown">
+                <a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  class="nav-link language dropdown-toggle">
+                <!--  <img src="{{ asset('img/avatar-1.jpg') }}" alt="..." class="img-fluid rounded-circle" style="width: 40px;">  -->
+                  <span class="d-none d-sm-inline-block">@if(!Request::has('branch') || empty(Request::query("branch")) || \App\branch::find(Request::query('branch')) == null)
+                                                           @lang('app.select_branch')
+                                                           @else
+                                                           {{\App\branch::find(Request::query('branch'))->branch_title}}
+                                                         @endif</span>
+                </a>
+                <ul aria-labelledby="languages" class="dropdown-menu">
+                  <?php
+                     $branches = \App\branch::all();
+                     if(!Auth::user()->IsAdmin())
+                        $branches = Auth::user()->branche;
 
-                          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                              @csrf
-                          </form>
+                     foreach($branches as $branch)
+                     {
+                         ?>
+                         <li>
+                           <a rel="nofollow" href="{{url('/dashboard')}}?lang={{app()->getLocale()}}&branch={{$branch->id}}" class="dropdown-item">
+                             <?php   echo $branch->branch_title;  ?></a>
+                         </li>
+                         <?php
 
-												</div>
-											</div>
-										</span>
+                     }
 
-                      @endguest
-
-
-									</div>
-								</div>
-
-								<!-- END: Topbar -->
-
-						</div>
-					</div>
-				</div>
-			</header>
-
-			<!-- END: Header -->
-
-			<!-- begin::Body -->
-			<div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
-
-				<!-- BEGIN: Left Aside -->
-			    @include('layouts.menu')
-
-				<!-- END: Left Aside -->
-				<div class="m-grid__item m-grid__item--fluid m-wrapper">
+                   ?>
 
 
-                         @yield('subhead')
 
-					<div class="m-content">
-					  @yield('content')
+                </ul>
+              </li>
+
+
+
+
+              <li class="nav-item dropdown">
+                <a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  class="nav-link language dropdown-toggle">
+                <!--  <img src="{{ asset('img/avatar-1.jpg') }}" alt="..." class="img-fluid rounded-circle" style="width: 40px;">  -->
+                  <span class="d-none d-sm-inline-block">{{ Auth::user()->name }}</span>
+                </a>
+                <ul aria-labelledby="languages" class="dropdown-menu">
+										@if(Auth::user()->IsAdmin())
+                  <li>
+                    <a rel="nofollow" href="{{url('/settings/1/edit')}}/{{app()->getLocale()}}" class="dropdown-item">
+                      <i class="fa fa-edit"></i> Settings</a>
+                  </li>
+									@endif
+									<li>
+										<a rel="nofollow" href="{{url('/dashboard')}}?lang={{app()->getLocale()=='en'?'ar':'en'}}" class="dropdown-item">
+											<i class="fa fa-edit"></i>{{app()->getLocale()=='en'?'العربية':'english'}}</a>
+									</li>
+                  <li>
+                    <a rel="nofollow" href="#" class="dropdown-item" onclick="event.preventDefault();
+																	 document.getElementById('logout-form').submit();">
+                      <i class="fas fa-sign-in-alt"></i> {{ __('Logout') }}  </a>
+                  </li>
+									<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+											@csrf
+										</form>
+                </ul>
+              </li>
+              <!-- Logout    -->
+
+            </ul>
           </div>
+        </div>
+      </nav>
+    </header>
+
+
+    <div class="page-content d-flex align-items-stretch">
+      <!-- Side Navbar -->
+      <nav class="side-navbar">
+			   @include('layouts.menu')
+      </nav>
+      <div class="content-inner">
+				 @yield('content')
+
+
+
+
+        <!-- Page Footer-->
+				<footer class="main-footer">
+           <div class="container-fluid">
+             <div class="row">
+               <div class="col-sm-12 text-center ">
+                 <p class="colorgold">Copyright &copy; 2018. All rights reserved ibtkarat</p>
+               </div>
+
+             </div>
+           </div>
+         </footer>
+
+
+      </div>
+    </div>
+  </div>
+
 
 @include('layouts.footer')

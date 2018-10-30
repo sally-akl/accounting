@@ -2,186 +2,128 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.add_new_quotes')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"><i class="far fa-plus-square"></i> @lang('app.add_new_quotes')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action="{{ url('quote/store') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}">
+                                                     @csrf
+
+																										 <div class="form-group row">
+																											 <label class="col-sm-3 form-control-label label-sm">@lang('app.cur_currency')</label>
+																											 <div class="col-sm-9">
+																													<select name="currency" class="form-control  {{ $errors->has('currency') ? ' is-invalid' : '' }}">
+																															<option value="SAR" >@lang('app.sar_currency')</option>
+																															<option value="EGP" >@lang('app.egp_currency')</option>
+																															<option value="USD" >@lang('app.usd_currency')</option>
+																													</select>
 
 
-                            @include("utility.error_messages")
+																											 </div>
+																										 </div>
 
 
-                              <form method="POST" action="{{ url('quote/store') }}">
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
+																									 <div class="form-group row">
+																										<label class="col-sm-3 form-control-label label-sm">  @lang('app.customer_name')</label>
+																										<div class="col-sm-9">
+																												<select name="customer_name" class="form-control {{ $errors->has('customer_name') ? ' is-invalid' : '' }}">
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.customer_name')  :
-                                                                      </label>
-                                                                      <select class="form-control m-input customer_name" name="customer_name">
-                                                                            <option value="0">Choose customer</option>
+																													<option value="0">Choose customer</option>
                                                                             @foreach ($customers as $key => $customer)
-                                                                              <option value="{{$customer->id}}">{{$customer->full_name}}</option>
+                                                                              <option value="{{$customer->id}}" {{old('customer_name') == $customer->id ?"selected":""}}>{{$customer->full_name}}</option>
                                                                             @endforeach
-                                                                      </select>
 
-                                                                  </div>
+																												</select>
 
-                                                                  <div class="form-group m-form__group">
-  																																		<label for="exampleInputEmail1">
-  																																			@lang('app.subject')  :
-  																																		</label>
-  																																		<input type="text"  name= "subject" class="form-control m-input" placeholder="{{ __('app.enter_subject') }}" value="">
+																										</div>
+																								</div>
 
-  																																</div>
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">@lang('app.subject') </label>
+																															 <div class="col-sm-9">
+																																	 <input id="inputHorizontalSuccess" name= "subject" value="{{ old('subject') }}"  placeholder="{{ __('app.enter_subject') }}" class="form-control {{ $errors->has('subject') ? ' is-invalid' : '' }} form-control-success" type="text">
+																															 </div>
+																													 </div>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.quote_status')  :
-                                                                      </label>
-                                                                      <select class="form-control m-input" name="quote_status">
-                                                                            <option value="">Choose Status</option>
-                                                                            <option value="pending">Pending</option>
-                                                                      </select>
+																													 <div class="form-group row">
+																														<label class="col-sm-3 form-control-label label-sm">  @lang('app.quote_status')</label>
+																														<div class="col-sm-9">
+																																<select name="quote_status" class="form-control {{ $errors->has('quote_status') ? ' is-invalid' : '' }}">
+																																	<option value="" {{old('quote_status') == "" ?"selected":""}}>Choose Status</option>
+																											            <option value="pending" {{old('quote_status') == "pending" ?"selected":""}}>Pending</option>
 
-                                                                  </div>
+																																</select>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.quote_date')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "quote_date" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_quote_date') }}">
-                                                                  </div>
+																														</div>
+																												</div>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.quote_expire_date')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "expire_date" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_quote_expire_date') }}">
-                                                                  </div>
+																												<div class="form-group row">
+																																<label class="col-sm-3 form-control-label label-sm">@lang('app.quote_date') </label>
+																																<div class="col-sm-9">
+																																		<input id="inputHorizontalSuccess" name= "quote_date"  value="{{ old('quote_date') }}" placeholder="{{ __('app.enter_quote_date') }}" class="form-control {{ $errors->has('quote_date') ? ' is-invalid' : '' }} form-control-success" type="date">
+																																</div>
+																														</div>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.discount_value')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "quote_discount" class="form-control m-input" placeholder="{{ __('app.enter_quote_discount') }}" value="0">
+																														<div class="form-group row">
+																																		<label class="col-sm-3 form-control-label label-sm">@lang('app.quote_expire_date') </label>
+																																		<div class="col-sm-9">
+																																				<input id="inputHorizontalSuccess" name= "expire_date" value="{{ old('expire_date') }}" placeholder="{{ __('app.enter_quote_expire_date') }}" class="form-control {{ $errors->has('expire_date') ? ' is-invalid' : '' }} form-control-success" type="date">
+																																		</div>
+																																</div>
 
-                                                                  </div>
+																																<div class="form-group row">
+																																				<label class="col-sm-3 form-control-label label-sm">@lang('app.discount_value') </label>
+																																				<div class="col-sm-9">
+																																						<input id="inputHorizontalSuccess" name= "quote_discount" value="0" placeholder="{{ __('app.enter_quote_discount') }}" class="form-control  {{ $errors->has('quote_discount') ? ' is-invalid' : '' }} form-control-success" type="text">
+																																				</div>
+																																		</div>
 
-
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.discount_type')  :
-                                                                      </label>
-
-                                                                      <select class="form-control m-input" name="quote_discount_type">
-
-                                                                            <option value="percentage" selected="">Percentage</option>
+																																		<div class="form-group row">
+																																		 <label class="col-sm-3 form-control-label label-sm">  @lang('app.discount_type')</label>
+																																		 <div class="col-sm-9">
+																																				 <select name="quote_discount_type" class="form-control {{ $errors->has('quote_discount_type') ? ' is-invalid' : '' }}">
+																																					 <option value="percentage" selected="">Percentage</option>
                                                                             <option value="amount">Fix</option>
 
-                                                                         </select>
+																																				 </select>
 
-                                                                  </div>
+																																		 </div>
+																																 </div>
 
+																																 <div class="form-group row">
+																																				 <label class="col-sm-3 form-control-label label-sm">@lang('app.quote_txt') </label>
+																																				 <div class="col-sm-9">
+																																				    <textarea rows="10" cols="70"  name="quote_txt">{{ old('quote_txt') }}</textarea>
+																																				 </div>
+																																		 </div>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.quote_txt')  :
-                                                                      </label>
-                                                                      <textarea rows="10" cols="70"  name="quote_txt"></textarea>
+																																		 <div class="form-group row">
+																																						 <label class="col-sm-3 form-control-label label-sm">@lang('app.quote_customer') </label>
+																																						 <div class="col-sm-9">
+																																						    <textarea rows="10" cols="70"  name="quote_customer">{{ old('quote_customer') }}</textarea>
+																																						 </div>
+																																				 </div>
 
-                                                                  </div>
+																									 	<button type="submit" class="btn btn-primary">+ {{ __('app.save') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.quote_customer')  :
-                                                                      </label>
-                                                                      <textarea rows="10" cols="70"  name="quote_customer"></textarea>
-
-                                                                  </div>
-
-
-
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.save') }}">
-
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-
-                                                          </form>
-
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-
-
-
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_quotes')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/quote")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.quote')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/quote/create")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.add_new_quotes')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
 @endsection

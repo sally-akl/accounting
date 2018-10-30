@@ -9,6 +9,7 @@ use App\Http\Requests\ServiceCodeRequest;
 use Session;
 use App\classes\Common;
 use Auth;
+use App\category;
 class ServiceController extends Controller
 {
     /**
@@ -16,11 +17,34 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
+    protected $categories;
+    protected $services;
+    public function __construct()
+    {
+          $this->middleware(function ($request, $next) {
+
+              $query2 = category::whereRaw('1 = 1');
+              $query2 = Common::user_filter_by_role($query2,false,array(),"");
+              $this->categories = $query2->get();
+              $query2 = service::select("services.*")->whereRaw('1 = 1');
+              $query2 = Common::user_filter_by_role($query2,true,array("categories as c","c.id","category_id"),"services");
+              $this->services = $query2->get();
+              return $next($request);
+         });
+
+
+    }
     public function index()
     {
-        $services = Common::CommonList('service',$this->pagination_num ) ;
-        return view('service.index',compact('services'));
+
+        $query = "";
+        $query = service::select("services.*")->whereRaw('1 = 1');
+        $query = Common::user_filter_by_role($query,true,array("categories as c","c.id","category_id"),"services");
+        $services = $query->orderBy("services.id","desc")->paginate($this->pagination_num) ;
+        $pservices = $query->get();
+        $action = "service";
+        return view('service.index',array("pcategories"=>$this->categories,"services"=>$services,"pservices"=>$pservices,"action"=>$action));
     }
 
     /**
@@ -30,8 +54,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-          $services = service::all();
-          return view('service.add',compact('services'));
+          return view('service.add',array("pcategories"=>$this->categories,"services"=>$this->services));
     }
 
     /**
@@ -44,12 +67,16 @@ class ServiceController extends Controller
     {
          $code = Common::GenerateCode(10,'service','service_code');
          $service = new service();
-         $service->title = $request->title;
+         $service->title = $request->stitle;
          $service->service_code = $code;
          $service->parent_id = $request->parent;
+         $service->category_id = $request->category;
          $service->user_id = Auth::user()->id;
          $service->save();
-         return redirect('/service')->with("message",trans('app.add_sucessfully'));
+         if($request->action == "category")
+            return redirect('/category'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
+
+         return redirect('/service'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
 
     }
 
@@ -74,8 +101,7 @@ class ServiceController extends Controller
     public function edit($id)
     {
           $service = service::find($id);
-          $services = service::all();
-          return view('service.update',compact('service','services'));
+          return view('service.update',array("pcategories"=>$this->categories,"service"=>$service,"services"=>$this->services));
     }
 
     public function editcode($id)
@@ -89,7 +115,7 @@ class ServiceController extends Controller
          $service = service::find($id);
          $service->service_code = $request->service_code;
          $service->save();
-         return redirect('/service')->with("message",trans('app.update_sucessfully'));
+         return redirect('/service'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -102,10 +128,11 @@ class ServiceController extends Controller
     public function update(ServiceRequest $request,$id)
     {
         $service = service::find($id);
-        $service->title = $request->title;
+        $service->title = $request->stitle;
         $service->parent_id = $request->parent;
+        $service->category_id = $request->category;
         $service->save();
-        return redirect('/service')->with("message",trans('app.update_sucessfully'));
+        return redirect('/service'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -123,8 +150,12 @@ class ServiceController extends Controller
     }
     public function search(Request $request)
     {
-         $search_title =  $request->title;
-         $services = service::where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
-         return view('service.index',compact('services'));
+         $search_title =  clean($request->title);
+         $query  = service::select("services.*")->where('services.title', 'like', '%' . $search_title . '%');
+         $query = Common::user_filter_by_role($query,true,array("categories as c","c.id","category_id"),"services");
+         $pservices = $query->get();
+         $services =  $query->orderBy("services.id","desc")->paginate($this->pagination_num);
+         $action = "service";
+         return view('service.index',array("pcategories"=>$this->categories,"services"=>$services,"pservices"=>$pservices,"action"=>$action));
     }
 }

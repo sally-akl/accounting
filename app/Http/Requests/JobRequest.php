@@ -24,7 +24,7 @@ class JobRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'=>'required|max:225',
+            'jtitle'=>'required|max:225',
             'category'=>'integer',
             //'salary'=>'regex:/^[0-9]+(\.[0-9][0-9]?)?$/'
         ];

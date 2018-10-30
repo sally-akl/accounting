@@ -1,0 +1,309 @@
+/* your styles go here */
+
+
+.chart-title{
+    margin-top: 20px;
+}
+
+/* Client Style Code */
+
+.red
+{
+    /* width: 290px; */
+    padding: 20px;
+    /* height: 140px; */
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -ms-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(245, 50, 73, 0.25);
+    margin-left: auto !important;
+}
+
+.blue
+{
+   /* width: 290px;  */
+    padding: 20px;
+    /* height: 140px; */
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -webkit-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -ms-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(119, 64, 162, 0.25);
+    margin-left: auto !important;
+}
+
+.green
+{
+  /* width: 290px;  */
+    padding: 20px;
+    /* height: 140px; */
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -ms-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    box-shadow: 0px 4px 10px 0px rgba(0, 212, 195, 0.25);
+    margin-left: auto !important;
+}
+
+.orange
+{
+    /* width: 290px;  */
+    padding: 20px;
+    /* height: 140px; */
+    margin-bottom: 20px;
+    color: #fff;
+    background-color: #fdb901;
+   
+    margin-left: auto !important;
+} 
+
+.red2
+{
+    padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -ms-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(245, 50, 73, 0.25);
+    margin-left: auto !important;
+}
+
+.blue2
+{
+   padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -webkit-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -ms-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(119, 64, 162, 0.25);
+    margin-left: auto !important;
+}
+
+.green2
+{
+  padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -ms-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    box-shadow: 0px 4px 10px 0px rgba(0, 212, 195, 0.25);
+    margin-left: auto !important;
+}
+.red3
+{
+    padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    background-image: -ms-linear-gradient( 135deg, rgb(239, 40, 64) 0%, rgb(255, 65, 87) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(245, 50, 73, 0.25);
+    margin: auto ;
+}
+
+.blue3
+{
+   padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -webkit-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    background-image: -ms-linear-gradient( 150deg, rgb(119, 64, 162) 0%, rgb(115, 118, 240) 100%);
+    box-shadow: 0px 4px 10px 0px rgba(119, 64, 162, 0.25);
+    margin: auto ;
+}
+
+.green3
+{
+  padding: 14px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-image: -moz-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -webkit-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    background-image: -ms-linear-gradient( 135deg, rgb(0, 212, 195) 0%, rgb(98, 218, 115) 99%);
+    box-shadow: 0px 4px 10px 0px rgba(0, 212, 195, 0.25);
+    margin: auto ;
+}
+
+.f-child{
+    margin-top: 7%;
+}
+
+.cart-top{
+    background-color: #fff;
+    padding: 30px 0px ;
+    border-radius: 10px;
+    margin-bottom: 29px;
+  
+  }
+  .roles{
+      margin: 0 25px;
+  }
+
+
+  #imaginary_container{
+    margin-top:5%; 
+  }
+.stylish-input-group .input-group-addon{
+    position: relative;
+    right: 31px;
+    top: 6px;
+}
+.stylish-input-group .form-control{
+    border-radius: 0;
+	box-shadow:0 0 0; 
+	border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+
+.head{
+    margin: 20px;
+    width: 100%;
+    font-size: 20px;
+    color: #6d6d6d;
+    font-weight: 300;
+}
+.drop-action{
+    float: right;
+    margin-right: 20px;
+}
+.top-controls{
+    margin-right: 5px;
+}
+
+.btn-group>.btn-group:not(:first-child)>.btn, .btn-group>.btn:not(:first-child) {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.information-invoice{
+    padding: 35px;
+}
+.info-right{
+    text-align: right;
+}
+.centerd-div{
+    float: none;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+}
+.center{
+    display: block;
+    margin: 0 auto;
+    float: none;
+}
+.details{
+    width: 50%;
+    display: block;
+    margin: 0 auto;
+    float: none;
+}
+.mg-top70{
+    margin-top: 70px;
+}
+/* End Client Style Code */
+
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+  }
+  
+  table tr {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+  }
+  
+  table th,
+  table td {
+    padding: .625em;
+    text-align: center;
+  }
+  
+  table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+  
+    table caption {
+      font-size: 1.3em;
+    }
+    
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: .625em;
+    }
+    
+    table td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      font-size: .8em;
+      text-align: right;
+    }
+    
+    table td::before {
+      /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    table td:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  /* .space-plus{
+    margin: 40px 6px 20px;
+  } */
+
+  .ring-not{
+    margin-top: 10px;
+}
+.hidden-print{
+    margin-bottom: 15px;
+}

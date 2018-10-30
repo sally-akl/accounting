@@ -2,209 +2,161 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.add_new_invoices')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"><i class="far fa-plus-square"></i> @lang('app.add_new_invoices')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action="{{ url('invoice/store') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}">
+															                      @csrf
+
+																										<div class="form-group row">
+																				              <label class="col-sm-3 form-control-label label-sm">@lang('app.cur_currency')</label>
+																				              <div class="col-sm-9">
+																				                 <select name="currency" class="form-control  {{ $errors->has('currency') ? ' is-invalid' : '' }}">
+																				                     <option value="SAR" >@lang('app.sar_currency')</option>
+																				                     <option value="EGP" >@lang('app.egp_currency')</option>
+																				                     <option value="USD" >@lang('app.usd_currency')</option>
+																				                 </select>
 
 
-                            @include("utility.error_messages")
+																				              </div>
+																			              </div>
 
+                                                   @if($c == 0)
+																									 <div class="form-group row">
+																										<label class="col-sm-3 form-control-label label-sm">  @lang('app.customer_name')</label>
+																										<div class="col-sm-9">
+																												<select name="customer_name" class="form-control customer_name {{ $errors->has('customer_name') ? ' is-invalid' : '' }}">
 
-                              <form method="POST" action="{{ url('invoice/store') }}">
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.customer_name')  :
-                                                                      </label>
-                                                                      <select class="form-control m-input customer_name" name="customer_name">
-                                                                            <option value="0">Choose customer</option>
+																													<option value="0"> @lang('app.Choose_customer')</option>
                                                                             @foreach ($customers as $key => $customer)
-                                                                              <option value="{{$customer->id}}">{{$customer->full_name}}</option>
+                                                                              <option value="{{$customer->id}}" {{old('customer_name') == $customer->id ?"selected":""}}>{{$customer->full_name}}</option>
                                                                             @endforeach
-                                                                      </select>
 
-                                                                  </div>
+																												</select>
 
-                                                                  <div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.address')  :
-                                                                      </label>
-                                                                      <textarea rows="10" cols="70" disabled name="customer_address" id="customer_address"></textarea>
+																										</div>
+																								</div>
+																								@else
+                                                  <input type="hidden" name="customer_name" class="customer_name" value="{{$c}}" />
 
-                                                                  </div>
+																								@endif
 
 
-                                                                <div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                      @lang('app.invoices_status')  :
-                                                                    </label>
-                                                                    <select class="form-control m-input" name="invoice_status">
-                                                                          <option value="">Choose Status</option>
-                                                                          <option value="paid">Paid</option>
-                                                                          <option value="unpaid">UnPaid</option>
-                                                                          <option value="pending">Pending</option>
-                                                                          <option value="stoped">Stoped</option>
+																								  <input type="hidden" name="itype" value="{{$type}}" />
 
-                                                                    </select>
-
-                                                                </div>
-
-																																<div class="form-group m-form__group">
-																																		<label for="exampleInputEmail1">
-																																			@lang('app.invoices_date')  :
-																																		</label>
-                                                                    <input type="text"  name= "invoices_date" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_invoices_date') }}">
-																																</div>
-
-																																<div class="form-group m-form__group">
-																																		<label for="exampleInputEmail1">
-																																			@lang('app.invoices_payment_term')  :
-																																		</label>
-                                                               <select class="form-control m-input" name="invoice_payment_term">
-                                                                    <option value="">Choose payment term</option>
-                                                                    <option value="due_on_receipt" selected="">Due On Receipt</option>
-                                                                     <option value="+3">+3 days</option>
-                                                                     <option value="+5">+5 days</option>
-                                                                     <option value="+7">+7 days</option>
-                                                                     <option value="+10">+10 days</option>
-                                                                     <option value="+15">+15 days</option>
-                                                                     <option value="+30">+30 days</option>
-                                                                     <option value="+45">+45 days</option>
-                                                                     <option value="+60">+60 days</option>
-                                                                  </select>
-
-																																</div>
+                                                       @if($c == 0)
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">@lang('app.address') </label>
+																															 <div class="col-sm-9">
+																																 <textarea rows="10" cols="70" disabled name="customer_address" id="customer_address"></textarea>
 
 
-																																<div class="form-group m-form__group">
-																																		<label for="exampleInputEmail1">
-																																			@lang('app.discount_value')  :
-																																		</label>
-																																		<input type="text"  name= "invoices_discount" class="form-control m-input" placeholder="{{ __('app.enter_invoices_discount') }}" value="0">
-
-																																</div>
+																													 </div>
+																													  </div>
+                                                          	@endif
 
 
-																																<div class="form-group m-form__group">
-																																		<label for="exampleInputEmail1">
-																																			@lang('app.discount_type')  :
-																																		</label>
+																													 <div class="form-group row">
+																														<label class="col-sm-3 form-control-label label-sm">  @lang('app.invoices_status')</label>
+																														<div class="col-sm-9">
+																																<select name="invoice_status" class="form-control {{ $errors->has('invoice_status') ? ' is-invalid' : '' }}">
+																																	<option value="" {{old('invoice_status') == "" ?"selected":""}}> @lang('app.Choose_Status') </option>
+																											            <option value="paid" {{old('invoice_status') == "paid" ?"selected":""}}>@lang('app.Paid')</option>
+																											            <option value="unpaid" {{old('invoice_status') == "unpaid" ?"selected":""}}>@lang('app.UnPaid')</option>
+																											            <option value="pending" {{old('invoice_status') == "pending" ?"selected":""}}>@lang('app.Pending')</option>
+																											            <option value="stoped" {{old('invoice_status') == "stoped" ?"selected":""}}>@lang('app.Stoped')</option>
 
-                                                                    <select class="form-control m-input" name="invoices_discount_type">
+																																</select>
 
-                                                                          <option value="percentage" selected="">Percentage</option>
-                                                                          <option value="amount">Fix</option>
+																														</div>
+																												</div>
 
-                                                                       </select>
+																												<div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">@lang('app.invoices_date') </label>
+																															 <div class="col-sm-9">
 
-																																</div>
+																																	 <input id="inputHorizontalSuccess" name= "invoices_date"  value="{{ old('invoices_date') }}"  placeholder="{{ __('app.enter_invoices_date') }}" class="form-control {{ $errors->has('invoices_date') ? ' is-invalid' : '' }} form-control-success" type="date">
+																															 </div>
+																													 </div>
+
+
+																													 <div class="form-group row">
+ 																														<label class="col-sm-3 form-control-label label-sm">  @lang('app.invoices_payment_term')</label>
+ 																														<div class="col-sm-9">
+
+																															 <input id="inputHorizontalSuccess" name= "invoice_payment_term"  value="0"  placeholder="{{ __('app.invoices_payment_term') }}" class="form-control {{ $errors->has('invoices_payment_term') ? ' is-invalid' : '' }} form-control-success" type="text">
+
+ 																														</div>
+ 																												</div>
 
 
 
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.save') }}">
+																													 <div class="form-group row">
+		 																															<label class="col-sm-3 form-control-label label-sm">@lang('app.discount_value') </label>
+		 																															<div class="col-sm-9">
+
+		 																																	<input id="inputHorizontalSuccess" name= "invoices_discount" value="0"  placeholder="{{ __('app.enter_invoices_discount') }}" class="form-control {{ $errors->has('invoices_discount') ? ' is-invalid' : '' }} form-control-success" type="text">
+		 																															</div>
+		 																													</div>
 
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
+																															<div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">  @lang('app.discount_type')</label>
+																															 <div class="col-sm-9">
+																																	 <select name="invoices_discount_type" class="form-control">
+																																		 <option value="percentage" selected="">@lang('app.Percentage')</option>
+																																				 <option value="amount">@lang('app.Fix')</option>
+																																	 </select>
 
-                                                          </form>
+																															 </div>
+																													 </div>
 
+																									 	<button type="submit" class="btn btn-primary">+ {{ __('app.save') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-
-														</div>
-														<!--end::Portlet-->
-
-
-
-                            <script type="text/javascript">
-                               $(".customer_name").on("change",function(){
-
-                                 var id = $(this).val();
-                                 var url_get_address = '{{url("customer/address")}}'+"/"+id
-                                          $.ajax({url: url_get_address , method:"get" , success: function(result){
-                                               $("#customer_address").val("");
-                                               result = JSON.parse(result);
-                                               console.log(result);
-                                               if(result.msg == "sucess")
-                                                  $("#customer_address").val(result.address);
-
-                                            }});
-
-                                 })
-
-
-
-                            </script>
-
-
-
-
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
 
 @endsection
 
+@section('footerjscontent')
 
-@section('subhead')
+<script type="text/javascript">
+							$(".customer_name").on("change",function(){
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.add_new_invoices')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/invoice")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.invoice')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/invoice/create")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.add_new_invoices')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
+								var id = $(this).val();
+								var url_get_address = '{{url("customer/address")}}'+"/"+id+"/"+'{{app()->getLocale()}}?branch={{ Request::query("branch") }}'
+												 $.ajax({url: url_get_address , method:"get" , success: function(result){
+															$("#customer_address").val("");
+															result = JSON.parse(result);
+															console.log(result);
+															if(result.msg == "sucess")
+																 $("#customer_address").val(result.address);
 
-											</ul>
-										</div>
-										<div>
+													 }});
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+								})
+
+
+
+					 </script>
 
 @endsection

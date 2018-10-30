@@ -16,10 +16,27 @@ class MajorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
+    protected $categories;
+    public function __construct()
+    {
+      $this->middleware(function ($request, $next) {
+
+            $query2 = category::whereRaw('1 = 1');
+            $query2 = Common::user_filter_by_role($query2,false,array(),"");
+            $this->categories = $query2->get();
+            return $next($request);
+       });
+
+
+    }
     public function index()
     {
-        $majors =  Common::CommonList('major',$this->pagination_num) ;
+
+        $query = "";
+        $query = major::select("major.*")->whereRaw('1 = 1');
+        $query = Common::user_filter_by_role($query,true,array("categories as c","c.id","category_id"),"major");
+        $majors = $query->orderBy("major.id","desc")->paginate($this->pagination_num) ;
         return view('major.index',compact('majors'));
     }
 
@@ -30,8 +47,10 @@ class MajorController extends Controller
      */
     public function create($where_from)
     {
-        $categories = category::all();
-        return view('major.add',compact('categories','where_from'));
+        $lay = 'major.add';
+        if($where_from == 1)
+         $lay = "ajax.add_major";
+        return view($lay,array("categories"=>$this->categories,"where_from"=>$where_from,"show_link"=>true,"is_ajax"=>$where_from));
     }
 
     /**
@@ -48,10 +67,19 @@ class MajorController extends Controller
          $major->user_id = Auth::user()->id;
          $major->save();
          $where_from =  $request->where_from;
-         if($where_from != "0")
-            return redirect('/'.$where_from.'/create/0');
+         if($request->is_ajax == 1)
+         {
+            echo json_encode(array("sucess"=>true));
+            exit();
+         }
 
-         return redirect('/major')->with("message",trans('app.add_sucessfully'));
+
+         if($where_from != "0" && !is_numeric($where_from) )
+            return redirect('/'.$where_from.'/create/0'."/".app()->getLocale()."?branch=".$request->query('branch'));
+        else if($where_from != 0 && is_numeric($where_from))
+            return redirect('/employeemajor'."/".$where_from.'/'.app()->getLocale()."?branch=".$request->query('branch'));
+
+         return redirect('/major'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
 
     }
 
@@ -76,8 +104,7 @@ class MajorController extends Controller
     public function edit($id)
     {
         $major = major::find($id);
-        $categories = category::all();
-        return view('major.update',compact('major','categories'));
+        return view('major.update',array("categories"=>$this->categories,"major"=>$major));
     }
 
     /**
@@ -93,7 +120,7 @@ class MajorController extends Controller
          $major->title =  $request->title;
          $major->category_id =  $request->category;
          $major->save();
-         return redirect('/major')->with("message",trans('app.update_sucessfully'));
+         return redirect('/major'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -111,8 +138,10 @@ class MajorController extends Controller
     }
     public function search(Request $request)
     {
-         $search_title =  $request->title;
-         $majors = major::where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
+         $search_title =  clean($request->title);
+         $query =  major::select("major.*")->where('major.title', 'like', '%' . $search_title . '%');
+         $query = Common::user_filter_by_role($query,true,array("categories as c","c.id","category_id"),"major");
+         $majors = $query->orderBy("id","desc")->paginate($this->pagination_num);
          return view('major.index',compact('majors'));
     }
 }

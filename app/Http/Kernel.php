@@ -59,6 +59,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'chuserrole' => \App\Http\Middleware\CheckUserRoles::class
+        'chuserrole' => \App\Http\Middleware\CheckUserRoles::class,
+        'language'=> \App\Http\Middleware\checklanguage::class,
+        'checkbranches'=> \App\Http\Middleware\checkbranches::class,
+        'XSSCheck'=> \App\Http\Middleware\XSSprotection::class,
+
+
     ];
 }

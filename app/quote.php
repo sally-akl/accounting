@@ -20,6 +20,12 @@ class quote extends Model
     {
         return $this->belongsToMany('App\service', 'invoice_items','quote_id','service_id')->withPivot('price','invoice_type','qty','service_id');
     }
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
+
+
 
 
 

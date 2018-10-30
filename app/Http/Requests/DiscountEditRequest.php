@@ -24,7 +24,8 @@ class DiscountEditRequest extends FormRequest
     public function rules()
     {
         return [
-          'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          //'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          'sal_min_extra'=>'required|integer',
         ];
     }
 }

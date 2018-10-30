@@ -18,7 +18,7 @@
                             @include("utility.error_messages")
 
 
-                              <form method="POST" action="{{ url('roles/storepermission') }}">
+                              <form method="POST" action="{{ url('roles/storepermission') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}">
                                   @csrf
                                                             <div class="row addConntent">
                                                                 <div class="col-xl-12">

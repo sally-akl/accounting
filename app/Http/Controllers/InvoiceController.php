@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Authenticated;
 use Validator;
 use Auth;
+use Lang;
 class InvoiceController extends Controller
 {
     /**
@@ -28,25 +29,37 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     protected $customers;
     protected $filter_customer;
     protected $services;
+    protected $invoice_num;
+    protected $total_paid;
+    protected $total_unpaid;
     public function __construct()
     {
-      Event::listen(Authenticated::class, function ($event) {
-        $list =  customer::whereRaw('1 = 1');
-        if(!Auth::user()->IsAdmin())
-          $list = $list->where("user_id",Auth::user()->id);
-        $this->customers = $list->get();
+        $this->middleware(function ($request, $next) {
+            $list =  customer::whereRaw('1 = 1');
+            $list = Common::user_filter_by_role($list,false,array(),"");
+            $this->customers = $list->get();
 
-        $list =  service::whereRaw('1 = 1');
-        if(!Auth::user()->IsAdmin())
-          $list = $list->where("user_id",Auth::user()->id);
 
-        $this->services = $list->get();
-        $this->filter_customer = true;
-      });
+            $list =  service::select("services.*")->whereRaw('1 = 1');
+            $list = Common::user_filter_by_role($list,true,array("categories as c","c.id","category_id"),"services");
+            $this->services = $list->get();
+            $this->filter_customer = true;
+
+            $list =  invoice::whereRaw('1 = 1');
+            $list = Common::user_filter_by_role($list,true,array("customers as c","c.id","customer_id"),"invoices");
+            $this->invoice_num = $list->get()->count();
+            $this->total_paid =  $list->where("invoice_status","paid")->count();
+
+             $list =  invoice::whereRaw('1 = 1');
+             $list = Common::user_filter_by_role($list,true,array("customers as c","c.id","customer_id"),"invoices");
+             $this->total_unpaid = $list->where("invoice_status","unpaid")->count();
+
+                               return $next($request);
+        });
 
     }
 
@@ -54,22 +67,28 @@ class InvoiceController extends Controller
     public function index()
     {
         $this->filter_customer = true;
-        $invoices =  Common::CommonList('invoice',$this->pagination_num );
-        return view('invoice.customer_invoices', array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer));
+        $list =  invoice::select("invoices.*")->whereRaw('1 = 1');
+        $list = Common::user_filter_by_role($list,true,array("customers as c","c.id","customer_id"),"invoices");
+        $invoices =  $list->orderBy("invoices.id","desc")->paginate($this->pagination_num) ;
+        return view('invoice.customer_invoices', array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer,"invoice_num"=>$this->invoice_num,"total_paid"=>$this->total_paid,"total_unpaid"=>$this->total_unpaid));
     }
 
     public function customer($id)
     {
         $this->filter_customer = true;
-        $invoices = invoice::where("customer_id",$id)->orderBy("id","desc")->paginate($this->pagination_num);
-        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer));
+        $list =  invoice::select("invoices.*")->where("customer_id",$id)->whereRaw('1 = 1');
+        $list = Common::user_filter_by_role($list,true,array("customers as c","c.id","customer_id"),"invoices");
+        $invoices = $list->orderBy("invoices.id","desc")->paginate($this->pagination_num);
+        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer,"invoice_num"=>$this->invoice_num,"total_paid"=>$this->total_paid,"total_unpaid"=>$this->total_unpaid));
     }
 
     public function all()
     {
         $this->filter_customer = false;
-        $invoices = Common::CommonList('invoice',$this->pagination_num );
-        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer));
+        $list =  invoice::select("invoices.*")->whereRaw('1 = 1');
+        $list = Common::user_filter_by_role($list,true,array("customers as c","c.id","customer_id"),"invoices");
+        $invoices =  $list->orderBy("invoices.id","desc")->paginate($this->pagination_num) ;
+        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer,"invoice_num"=>$this->invoice_num,"total_paid"=>$this->total_paid,"total_unpaid"=>$this->total_unpaid));
     }
 
 
@@ -79,9 +98,10 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($c,$type)
     {
-        return view('invoice.add',array("customers"=>$this->customers));
+        Session::put('itype',$type);
+        return view('invoice.add',array("customers"=>$this->customers,"c"=>$c,"type"=>$type));
     }
 
     /**
@@ -98,18 +118,19 @@ class InvoiceController extends Controller
          $invoice->invoice_status = $request->invoice_status;
          $invoice->invoice_date = date("Y-m-d H:i", strtotime($request->invoices_date));
          $invoice->invoice_payment_term = $request->invoice_payment_term;
+         $invoice->next_invoice_pay = null;
          if($invoice->invoice_payment_term != "due_on_receipt")
          {
             $invoice->next_invoice_pay = date("Y-m-d", strtotime($request->invoices_date.$invoice->invoice_payment_term." days"));
          }
          $invoice->discount_amount = $request->invoices_discount;
          $invoice->discount_type = $request->invoices_discount_type;
+         $invoice->currancy = $request->currency;
          $invoice->invoice_code_num = $code;
          $invoice->user_id = Auth::user()->id;
          $invoice->save();
 
-         return redirect('/invoice/items/'.$invoice->id);
-
+         return redirect('/invoice/items/'.$invoice->id."/".app()->getLocale()."?branch=".$request->query('branch'));
     }
 
 
@@ -117,11 +138,14 @@ class InvoiceController extends Controller
     {
          $invoice = invoice::find($id);
          $invoice_items = null;
+         $currancy = "";
 
          if($invoice != null)
-            $invoice_items = $invoice->services;
-
-        return view('invoice.items',array("invoice_items"=>$invoice_items,"services"=>$this->services,"invoice"=>$invoice));
+         {
+              $invoice_items = $invoice->services;
+              $currancy = Common::getCurrencyText($invoice->currancy);
+         }
+        return view('invoice.items',array("invoice_items"=>$invoice_items,"services"=>$this->services,"invoice"=>$invoice,"currancy"=>$currancy));
     }
 
     public function store_invoice_items(Request $request)
@@ -145,7 +169,12 @@ class InvoiceController extends Controller
              }
 
          }
-          return redirect('/invoice/all');
+
+         $redirect = Session::get('itype');
+         if($redirect != "toinvoice")
+           return redirect('/customer'."/".app()->getLocale()."?branch=".$request->query('branch'));
+
+          return redirect('/invoice/all'."/".app()->getLocale()."?branch=".$request->query('branch'));
     }
 
     /**
@@ -170,12 +199,12 @@ class InvoiceController extends Controller
         return view('invoice.show',array("invoice"=>$invoice,"company_settings"=>$company_settings,"transfers"=>$transfers));
     }
 
-    public function update_status($id,$ptype)
+    public function update_status($id,$ptype,Request $request)
     {
        $invoice = invoice::find($id);
        $invoice->invoice_status = $ptype;
        $invoice->save();
-         return redirect("/invoice"."/".$id.'/show');
+         return redirect("/invoice"."/".$id.'/show'."/".app()->getLocale()."?branch=".$request->query('branch'));
     }
 
     /**
@@ -211,7 +240,7 @@ class InvoiceController extends Controller
       $invoice->discount_type = $request->invoices_discount_type;
       $invoice->save();
 
-      return redirect('/invoice/items/'.$invoice->id);
+      return redirect('/invoice/items/'.$invoice->id."/".app()->getLocale()."?branch=".$request->query('branch'));
     }
 
 
@@ -219,9 +248,58 @@ class InvoiceController extends Controller
     {
         $customer_id  =  $request->customer_val;
         $this->filter_customer = true;
-        $invoices = invoice::where('customer_id', $customer_id)
-                  ->orderBy("id","desc")->paginate($this->pagination_num);
-        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer));
+        $from ="";
+        $to ="";
+        $query = "";
+
+        $request->from = clean($request->from);
+        $request->to = clean($request->to);
+        if(!empty($request->from) && !empty($request->to))
+        {
+            $from = date("Y-m-d H:i", strtotime($request->from));
+            $to = date("Y-m-d H:i", strtotime($request->to));
+        }
+
+        if(!empty($from) && !empty($to))
+        {
+             $query = invoice::select("invoices.*")->where(function($query2) use ($from,$to){
+                         $query2->whereBetween('invoice_date',array($from,$to));
+             });
+        }
+
+        if($request->invoice_status !="" )
+        {
+              if(!empty($query ))
+              {
+                 $query = $query->where("invoice_status",$request->invoice_status);
+              }
+              else {
+                 $query = invoice::select("invoices.*")->where("invoice_status",$request->invoice_status);
+              }
+        }
+
+        if(!empty($customer_id))
+        {
+              if(!empty($query ))
+              {
+                 $query = $query->where('customer_id', $customer_id);
+              }
+              else {
+                 $query = invoice::select("invoices.*")->where('customer_id', $customer_id);
+              }
+
+        }
+
+        $query = Common::user_filter_by_role($query,true,array("customers as c","c.id","customer_id"),"invoices");
+
+        if(!empty($query ))
+        {
+           $invoices =$query->orderBy("invoices.id","desc")->paginate($this->pagination_num);
+
+        }
+
+
+        return view('invoice.customer_invoices',array("invoices"=>$invoices , "customers"=>$this->customers, "filter_customer"=>$this->filter_customer,"total_paid"=>$this->total_paid,"total_unpaid"=>$this->total_unpaid,"invoice_num"=>$this->invoice_num));
     }
 
     public function destroy($id)

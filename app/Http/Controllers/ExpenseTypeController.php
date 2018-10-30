@@ -15,10 +15,10 @@ class ExpenseTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
-        $expenses =  Common::CommonList('expense_type',$this->pagination_num ) ;
+        $expenses = expense_type::orderBy("id","desc")->paginate($this->pagination_num) ;
         return view('expenseType.index',compact('expenses'));
     }
 
@@ -46,10 +46,10 @@ class ExpenseTypeController extends Controller
          $expense_type->save();
          $where_from =  $request->where_from;
          if($where_from != "0")
-            return redirect('/transactions/create/'.$where_from);
+            return redirect('/transactions/create/'.$where_from."/".app()->getLocale()."?branch=".$request->query('branch'));
 
 
-         return redirect('/expense')->with("message",trans('app.add_sucessfully'));
+         return redirect('/expense'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
 
     }
 
@@ -89,7 +89,7 @@ class ExpenseTypeController extends Controller
         $expense = expense_type::find($id);
         $expense->title = $request->title;
         $expense->save();
-        return redirect('/expense')->with("message",trans('app.update_sucessfully'));
+        return redirect('/expense'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -107,7 +107,7 @@ class ExpenseTypeController extends Controller
     }
     public function search(Request $request)
     {
-         $search_title =  $request->title;
+         $search_title =  clean($request->title);
          $expenses = expense_type::where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
          return view('expenseType.index',compact('expenses'));
     }

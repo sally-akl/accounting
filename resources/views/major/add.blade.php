@@ -2,127 +2,32 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.add_new_major')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> <i class="far fa-plus-square"></i> @lang('app.add_new_major')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action="{{ url('major/store') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}">
+                                                  @csrf
+                                                     @include("major.common_add_content")
+																										<button type="submit" class="btn btn-primary">+ {{ __('app.save') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-
-                            @include("utility.error_messages")
-
-
-                              <form method="POST" action="{{ url('major/store') }}">
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-
-																																	<div class="form-group m-form__group">
-																															<label for="exampleInputEmail1">
-																																@lang('app.category_name')  :
-																															</label>
-
-																															<div class="row">
-																																	<div class="col-xl-9">
-																																		<select class="form-control m-input" name="category">
-																																				 @foreach ($categories as $key => $category)
-																																					<option value="{{$category->id}}">{{$category->title}}</option>
-																																				 @endforeach
-																																		</select>
-
-																																	</div>
-
-																																	<div class="col-xl-3" style="padding:11px;">
-																																		<a href="{{ url('category/create/major') }}" style="text-decoration:none;color:#000;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add category</a>
-																																	</div>
-																															</div>
-
-
-
-
-
-																													</div>
-
-                                                                <div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                      @lang('app.major_name')  :
-                                                                    </label>
-                                                                    <input type="text"  name= "title" class="form-control m-input" placeholder="{{ __('app.enter_major_name') }}">
-
-                                                                </div>
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.add_new_major') }}">
-
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-                                     <input type="hidden" name="where_from" value="{{$where_from}}" />
-                                                          </form>
-
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_major')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/major")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.major')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/major/create")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.add_new_major')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
-
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 @endsection

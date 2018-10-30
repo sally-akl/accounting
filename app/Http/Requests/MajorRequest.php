@@ -28,4 +28,19 @@ class MajorRequest extends FormRequest
             'category'=>'required|integer',
         ];
     }
+
+    public function response(array $errors)
+    {
+        $transformed = [];
+        foreach ($errors as $field => $message) {
+            $transformed[] = [
+                'field' => $field,
+                'message' => $message[0]
+            ];
+        }
+
+        if($this->is_ajax = 1)
+           return response()->json(['errors' => $transformed], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        return $errors;
+    }
 }

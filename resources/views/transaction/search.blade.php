@@ -1,55 +1,68 @@
-<form method="get" action="{{ url('transactions/search') }}" class="form-inline">
+<form method="get" action="{{ url('transactions/all/filter/search') }}/{{app()->getLocale()}}" >
     @csrf
-<div class="col-xs-1">
-  <input type="text"  name= "transfer_from" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_date_from') }}">
-</div>
 
-<div class="col-xs-1">
-  <input type="text"  name= "transfer_to" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_date_to') }}">
-</div>
-<select class="form-control m-input transfer_type" name="transfer_type">
+<div class="form-group row">
+    <label class="col-sm-3 form-control-label label-sm"> @lang('app.from')</label>
+    <div class="col-sm-9">
+      <input id="inputHorizontalSuccess" name="transfer_from" placeholder="{{ __('app.enter_date_from') }}" class="form-control form-control-success" type="date">
+    </div>
+  </div>
 
-      <option value="income">Income</option>
-      <option value="expense">Expense</option>
-      <option value="transfer">Transfer</option>
+  <div class="form-group row">
+      <label class="col-sm-3 form-control-label label-sm"> @lang('app.to')</label>
+      <div class="col-sm-9">
+        <input id="inputHorizontalSuccess" name="transfer_to" placeholder="{{ __('app.enter_date_to') }}" class="form-control form-control-success" type="date">
+      </div>
+    </div>
 
-</select>
+    <div class="form-group row">
+        <label class="col-sm-3 form-control-label label-sm">  @lang('app.type') </label>
+        <div class="col-sm-9">
+            <select name="transfer_type2" class="form-control transfer_type">
 
+              <option value="income"> @lang('app.Income')</option>
+              <option value="expense"> @lang('app.Expense')</option>
+            </select>
 
-<select class="form-control m-input" name="to_account">
-     @foreach ($accounts as $key => $account)
-      <option value="{{$account->id}}">{{$account->account_number}}</option>
-     @endforeach
-</select>
-
-
-
-<select class="form-control m-input invoice_val" name="invoice_val" style="display:none;">
-     @foreach ($invoices as $key => $inv)
-      <option value="{{$inv->id}}">{{$inv->invoice_code_num}}</option>
-     @endforeach
-</select>
-
-<select class="form-control m-input expense_val" name="expense_val" style="display:none;">
-     @foreach ($expense_type as $key => $exp)
-      <option value="{{$exp->id}}">{{$exp->title}}</option>
-     @endforeach
-</select>
+        </div>
+    </div>
 
 
-<select class="form-control m-input account_from" name="account_from" style="display:none;">
-     @foreach ($accounts as $key => $account)
-      <option value="{{$account->id}}">{{$account->account_number}}</option>
-     @endforeach
-</select>
+    <div class="form-group row invoice_val" style="display:none;">
+        <label class="col-sm-3 form-control-label label-sm">  @lang('app.invoice') </label>
+        <div class="col-sm-9">
+            <select name="invoice_val" class="form-control" >
+              <option value="0">Select</option>
+              @foreach ($invoices as $key => $inv)
+               <option value="{{$inv->id}}">{{$inv->invoice_code_num}}</option>
+              @endforeach
+            </select>
+
+        </div>
+    </div>
 
 
+    <div class="form-group row expense_val" style="display:none;">
+        <label class="col-sm-3 form-control-label label-sm">  @lang('app.expense_type') </label>
+        <div class="col-sm-9">
+            <select name="expense_val" class="form-control" >
+              <option value="0">Select</option>
+              @foreach ($expense_type as $key => $exp)
+               <option value="{{$exp->id}}">{{$exp->title}}</option>
+              @endforeach
+            </select>
 
-<div class="col-xs-6">
+        </div>
+    </div>
 
-    <button type="submit" class="btnSearchIcon"><i class="fa fa-search"></i></button>
-</div>
+
+    <input type="hidden" name="transfer_type" value="all" />
+     <input type="hidden" name="branch" value='{{ Request::query("branch") }}'  />
+      <button type="submit" class="btn btn-primary">@lang('app.Search') </button>
+
 </form>
+
+@section('footerjscontent')
 
 <script type="text/javascript">
 
@@ -61,12 +74,13 @@ $(".transfer_type").on("change",function()
     $(".expense_val").css("display","none");
     $(".account_from").css("display","none");
     if(sel_val == "income")
-       $(".invoice_val").css("display","block");
+       $(".invoice_val").css("display","");
     if(sel_val == "expense")
-       $(".expense_val").css("display","block");
+       $(".expense_val").css("display","");
     if(sel_val == "transfer")
-      $(".account_from").css("display","block");
+      $(".account_from").css("display","");
 
 });
 
 </script>
+@endsection

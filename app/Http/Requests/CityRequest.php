@@ -28,4 +28,5 @@ class CityRequest extends FormRequest
             'country_value'=>'integer'
         ];
     }
+
 }

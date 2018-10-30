@@ -17,5 +17,12 @@ class discount extends Model
     {
          return $this->belongsTo('App\emplyee_major','emp_major_id');
     }
-
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
+    public function extra_min()
+    {
+         return $this->belongsTo('App\extra_mis_salaries','extra_minus_id');
+    }
 }

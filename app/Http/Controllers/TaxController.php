@@ -14,7 +14,7 @@ class TaxController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
         $taxes = tax::orderBy("id","desc")->paginate($this->pagination_num);
@@ -44,7 +44,7 @@ class TaxController extends Controller
          $tax->tax_rate = $request->rate;
          $tax->rate_type = $request->rate_type;
          $tax->save();
-         return redirect('/tax')->with("message",trans('app.add_sucessfully'));
+         return redirect('/tax'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
     }
 
     /**
@@ -85,7 +85,7 @@ class TaxController extends Controller
           $tax->tax_rate = $request->rate;
           $tax->rate_type = $request->rate_type;
           $tax->save();
-          return redirect('/tax')->with("message",trans('app.update_sucessfully'));
+          return redirect('/tax'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**

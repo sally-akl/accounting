@@ -2,145 +2,104 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.add_new_user')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> @lang('app.add_new_user')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
+	                                                    @csrf
 
 
-                            @include("utility.error_messages")
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">   @lang('app.customer_name')</label>
+																															 <div class="col-sm-9">
+																																	 <input id="inputHorizontalSuccess" name="name" value="{{ old('name') }}" required autofocus   class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }} " type="text">
+																																	 @if ($errors->has('name'))
+																																			<span class="invalid-feedback" role="alert">
+																																					<strong>{{ $errors->first('name') }}</strong>
+																																			</span>
+																																	@endif
+																															 </div>
+																													 </div>
 
 
-                              <form method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-                                                                <div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                      {{ __('Name') }}  :
-                                                                    </label>
-                                                                    <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}  m-input" name="name" value="{{ old('name') }}" required autofocus>
+																													 <div class="form-group row">
+																																	 <label class="col-sm-3 form-control-label label-sm">   @lang('app.customer_email')</label>
+																																	 <div class="col-sm-9">
+																																			 <input id="inputHorizontalSuccess" name="email" value="{{ old('email') }}" required  class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }} " type="text">
+																																			 @if ($errors->has('email'))
+																																				 <span class="invalid-feedback" role="alert">
+																																						 <strong>{{ $errors->first('email') }}</strong>
+																																				 </span>
+																																		 @endif
+																																	 </div>
+																															 </div>
 
-                                                                    @if ($errors->has('name'))
-                                                                        <span class="invalid-feedback" role="alert">
-                                                                            <strong>{{ $errors->first('name') }}</strong>
-                                                                        </span>
-                                                                    @endif
 
-                                                                </div>
-
-																																<div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                    {{ __('E-Mail Address') }}  :
-                                                                    </label>
-                                                                      <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }} m-input" name="email" value="{{ old('email') }}" required>
-
-                                                                      @if ($errors->has('email'))
-                                                                          <span class="invalid-feedback" role="alert">
-                                                                              <strong>{{ $errors->first('email') }}</strong>
-                                                                          </span>
-                                                                      @endif
-
-                                                                </div>
-
-																																<div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                    {{ __('Password') }}  :
-                                                                    </label>
-                                                                    <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                                                    @if ($errors->has('password'))
+																															 <div class="form-group row">
+																																			<label class="col-sm-3 form-control-label label-sm">  @lang('app.Password') </label>
+																																			<div class="col-sm-9">
+																																					<input id="inputHorizontalSuccess" name="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }} " type="password">
+																																					@if ($errors->has('password'))
                                                                         <span class="invalid-feedback" role="alert">
                                                                             <strong>{{ $errors->first('password') }}</strong>
                                                                         </span>
                                                                     @endif
-                                                                </div>
-
-																																<div class="form-group m-form__group">
-                                                                    <label for="exampleInputEmail1">
-                                                                    {{ __('Confirm Password') }} :
-                                                                    </label>
-                                                                      <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                                                                </div>
+																																			</div>
+																																	</div>
 
 
+																																	<div class="form-group row">
+	 																																			<label class="col-sm-3 form-control-label label-sm"> @lang('app.Confirm_Password') </label>
+	 																																			<div class="col-sm-9">
+	 																																					<input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+
+	 																																			</div>
+	 																																	</div>
+
+																																		<div class="form-group row">
+		 																																<label class="col-sm-3 form-control-label label-sm">	@lang('app.branch_name')</label>
+		 																																<div class="col-sm-9">
+		 																																		<select name="branch_name[]" multiple class="form-control {{ $errors->has('branch_name') ? ' is-invalid' : '' }}">
+
+
+		 																																								@foreach ($branches as $key => $branch)
+		 																																									<option value="{{$branch->id}}" {{old('branch_name') == $branch->id ?"selected":""}}>{{$branch->branch_title}}</option>
+		 																																								@endforeach
+
+		 																																		</select>
+
+		 																																</div>
+		 																														</div>
+
+
+																																		<input type="hidden" name="action" value="{{$action}}" />
+																																		<input type="hidden" name="role" value="{{$role}}" />
 
 
 
 
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('Register') }}">
 
+																									 <button type="submit" class="btn btn-primary">+  @lang('app.Register')</button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-
-                                                          </form>
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												 @lang('app.add_new_user')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/user")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.user')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("register")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															{{ __('Register') }}
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
 @endsection

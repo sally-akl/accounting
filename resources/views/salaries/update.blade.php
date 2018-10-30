@@ -2,155 +2,110 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.update_salary')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> <i class="far fa-edit"></i> @lang('app.update_salary')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action='{{url("employeemajor/{$employee_major->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+															                  	@csrf
+																								  <input type="hidden" name="employee_val" value="{{$emp_id}}" />
 
+																								<div class="form-group row">
+																								 <label class="col-sm-3 form-control-label label-sm">@lang('app.major_name')</label>
+																								 <div class="col-sm-9">
+																										 <select name="major_val" class="form-control major_val" disabled>
+																											 @foreach ($majors as $key => $maj)
+																																						 <option value="{{$maj->id}}"  {{$maj->id == $employee_major->major_id?"selected":"" }}>{{$maj->title}}</option>
+																																					 @endforeach
 
-                            @include("utility.error_messages")
+																										 </select>
 
-
-                              <form method="POST" action='{{url("employeemajor/{$employee_major->id}")}}'>
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-
-																																	<div class="form-group m-form__group">
- 																																		 <label for="exampleInputEmail1">
- 																																			 @lang('app.employee_name')  :
- 																																		 </label>
- 																																		 <select class="form-control m-input" name="employee_val" disabled>
-
- 																																					 @foreach ($employees as $key => $emp)
- 																																						 <option value="{{$emp->id}}"  {{$emp->id == $employee_major->emplyee_id?"selected":"" }}>{{$emp->employee_name}}</option>
- 																																					 @endforeach
- 																																		 </select>
-
- 																																	 </div>
-
-
- 																																	 <div class="form-group m-form__group">
- 																																			 <label for="exampleInputEmail1">
- 																																				 @lang('app.major_name')  :
- 																																			 </label>
- 																																			 <select class="form-control m-input" name="major_val" disabled>
-
- 																																						 @foreach ($majors as $key => $maj)
- 																																							 <option value="{{$maj->id}}"  {{$maj->id == $employee_major->major_id?"selected":"" }}>{{$maj->title}}</option>
- 																																						 @endforeach
- 																																			 </select>
-
- 																																		 </div>
-
-
- 																																		 <div class="form-group m-form__group">
- 																																				 <label for="exampleInputEmail1">
- 																																					 @lang('app.employee_join_data')  :
- 																																				 </label>
-
- 																																				 <input type="text"  name= "join_date" class="form-control m-input" id="m_datepicker_1" readonly="" placeholder="{{ __('app.enter_employee_join_date') }}" value="{{$employee_major->join_date}}" disabled>
-
- 																																		 </div>
-
- 																															 <div class="form-group m-form__group">
- 																																	 <label for="exampleInputEmail1">
- 																																		 @lang('app.employee_salary')  :
- 																																	 </label>
- 																																	 <input type="text"  name= "salary" class="form-control m-input" placeholder="{{ __('app.enter_emp_salary') }}" value="{{$employee_major->current_salary}}">
-
- 																															 </div>
-
-
- 																															 <div class="form-group m-form__group">
- 																																	 <label for="exampleInputEmail1">
- 																																		 @lang('app.employee_current')  :
- 																																	 </label>
- 																																	 <input type="checkbox"  name= "is_current" {{$employee_major->is_current == 1?"checked":"" }}>
-
- 																															 </div>
+																						 </div>
+																					 </div>
 
 
 
 
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">   	@lang('app.employee_join_data')  </label>
+																															 <div class="col-sm-9">
+																																	 <input id="inputHorizontalSuccess" name= "join_date"  value="{{$employee_major->join_date}}" disabled placeholder="{{ __('app.enter_employee_join_date') }}" class="form-control form-control-success" type="date">
+																															 </div>
+																													 </div>
+
+																													 <div class="form-group row">
+																																	 <label class="col-sm-3 form-control-label label-sm">   	@lang('app.employee_salary')  </label>
+																																	 <div class="col-sm-9">
+																																			 <input id="inputHorizontalSuccess" name= "salary" value="{{$employee_major->current_salary}}"  placeholder="{{ __('app.enter_emp_salary') }}" class="form-control form-control-success" type="text">
+																																	 </div>
+																															 </div>
 
 
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.update_salary') }}">
+																															 <div class="form-group row">
+																									             <label class="col-sm-3 form-control-label label-sm">@lang('app.cur_currency')</label>
+																									             <div class="col-sm-9">
+																									                <select name="currency" class="form-control major_val {{ $errors->has('currency') ? ' is-invalid' : '' }}">
+																									                    <option value="SAR"  {{$employee_major->currancy == "SAR" ? "selected":""}} >@lang('app.sar_currency')</option>
+																									                    <option value="EGP" {{$employee_major->currancy == "EGP" ? "selected":""}} >@lang('app.egp_currency')</option>
+																									                    <option value="USD" {{$employee_major->currancy == "USD" ? "selected":""}} >@lang('app.usd_currency')</option>
+																									                </select>
 
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
-
-                                                          </form>
+																									             </div>
+																									             </div>
 
 
+																															 <div class="form-group row">
+																																			 <label class="col-sm-3 form-control-label label-sm">  	@lang('app.employee_current')   </label>
+																																			 <div class="col-sm-9">
+																																						<input type="checkbox"  name= "is_current" {{$employee_major->is_current == 1?"checked":"" }}>
+																																			 </div>
+																																	 </div>
 
-														</div>
-														<!--end::Portlet-->
+
+																																	 @if(is_int($branches))
+									 																									<input type="hidden" name="branch_name" value="{{$employee_major->branch_id}}" />
+
+									 																									 @else
+
+									 																									 <div class="form-group row">
+									 																														<label class="col-sm-3 form-control-label label-sm">@lang('app.branch_name')</label>
+									 																														<div class="col-sm-9">
+									 																												<select name="branch_name" class="form-control">
 
 
-@endsection
+									 																																		 @foreach ($branches as $key => $branch)
+									 																																			 <option value="{{$branch->id}}" {{$employee_major->branch_id == $branch->id ?"selected":""}}>{{$branch->branch_title}}</option>
+									 																																		 @endforeach
+
+									 																													</select>
+									 																													</div>
+									 																											</div>
+
+									 																									 @endif
 
 
+																									 <button type="submit" class="btn btn-primary add_emp_major">{{ __('app.update_salary') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-@section('subhead')
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_salaries')
-											</h3>
-
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/employeemajor")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.salaries')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("employeemajor/{$employee_major->id}/edit")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.update_salary')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
 
 @endsection

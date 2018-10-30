@@ -24,8 +24,9 @@ class ExtraSalaryEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
-            'title'=>'required|max:225',
+          //  'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          //  'title'=>'required|max:225',
+          'sal_min_extra'=>'required|integer',
         ];
     }
 }

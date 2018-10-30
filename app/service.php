@@ -14,4 +14,14 @@ class service extends Model
       {
           return $this->belongsToMany('App\invoice', 'invoice_items');
       }
+      public function users()
+      {
+          return $this->belongsTo('App\User',"user_id");
+      }
+      public function category()
+      {
+           return $this->belongsTo('App\category');
+      }
+
+
 }

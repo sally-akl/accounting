@@ -14,11 +14,14 @@ class CountryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
          $countries = country::orderBy("id","desc")->paginate($this->pagination_num);
-         return view('country.index',compact('countries'));
+         $countries_all = country::all();
+         $where_from = 0;
+         $redirect_to_country = 1;
+         return view('country.index',compact('countries','where_from','countries_all','redirect_to_country'));
     }
 
     /**
@@ -39,14 +42,14 @@ class CountryController extends Controller
      */
     public function store(CountryRequest $request)
     {
+          Session::put('s_action_after', 'country');
           $country = new country();
-          $country->title = $request->title;
+          $country->title = $request->ctitle;
           $country->save();
           $where_from = $request->where_from;
-          if($where_from != "0")
-             return redirect('/'.$where_from.'/create');
+          return redirect('/country'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
 
-          return redirect('/country')->with("message",trans('app.add_sucessfully'));
+        //  return redirect('/country'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
         //  return redirect()->back()->with("message",trans('app.add_sucessfully'));
     }
 
@@ -83,10 +86,11 @@ class CountryController extends Controller
      */
     public function update(CountryRequest $request, $id)
     {
+         Session::put('s_action_after', 'country');
          $country = country::find($id);
-         $country->title = $request->title;
+         $country->title = $request->ctitle;
          $country->save();
-         return redirect('/country')->with("message",trans('app.update_sucessfully'));
+         return redirect('/country'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -105,9 +109,12 @@ class CountryController extends Controller
 
     public function search(Request $request)
     {
-         $search_title =  $request->title;
+         $search_title =  clean($request->title);
+         $where_from = 0;
+         $countries_all = country::all();
          $countries = country::where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
-         return view('country.index',compact('countries'));
+         $redirect_to_country = 1;
+         return view('country.index',compact('countries','where_from','countries_all','redirect_to_country'));
 
     }
 

@@ -28,7 +28,9 @@ class CustomerRequest extends FormRequest
             'email'=>'required|max:50|unique:customers,email,'.$this->route('id'),
             'phone'=>'max:255',
             'address'=>'max:255',
-            'city_val'=>'integer'
+            'city_val'=>'integer',
+            'branch_name'=>'required'
         ];
     }
+
 }

@@ -23,7 +23,7 @@ class EmployeeRequest extends FormRequest
      */
     public function rules()
     {
-        
+
         return [
             'name'=>'required|max:255',
             'address'=>'max:255',
@@ -31,7 +31,8 @@ class EmployeeRequest extends FormRequest
             'phone'=>'max:255',
             'status'=>'max:30',
             'details'=>'string',
-            'join_date'=>'date'
+            'join_date'=>'required|date',
+            'branch_name'=>'required'
         ];
     }
 }

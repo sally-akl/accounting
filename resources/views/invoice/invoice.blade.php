@@ -2,67 +2,21 @@
 
 															<div id="invoice_content">
 
-                              <div class="invoice_content">
+																													 <div class="row information-invoice">
+																															 <div class="col-lg-6">
+																																	 <h3>Invoice</h3>
+																																	 <h3>#{{$invoice->invoice_code_num}}</h3>
+																																	 <h3>{{$invoice->invoice_status}}</h3>
+																																	 <h3>@lang('app.invoice_to')    {{$invoice->CustomerData->address}}</h3>
+																																	 <h3>@lang('app.phone') {{$invoice->CustomerData->phone}}</h3>
+																																	 <h3>@lang('app.email')  {{$invoice->CustomerData->email}}</h3>
+																															 </div>
+																															 <div class="col-lg-6 info-right">
+																																 <img src="{{ url('/') }}/images/{{$company_settings->company_logo}}" width="280" height="60"/>
 
-                                <header class="clearfix">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <h2>Invoice</h2>
-                                            <h4>#{{$invoice->invoice_code_num}}</h4>
-                                            <h3>{{$invoice->invoice_status}}</h3>
-                                        </div>
-
-                                        <div class="col-sm-6  to_right">
-																					<div class="company_info_content">
-                                          <div>
-
-																						<img src="{{ url('/') }}/images/{{$company_settings->company_logo}}" width="280" height="60"/>
-
-																					</div>
-                                          <address>
-                                           <strong>{{$company_settings->company_name}}</strong>
-																					 <br>
-                                           {{$company_settings->company_address}}
-																					</address>
-                                          </div>
-                                        </div>
-
-                                    </div>
-
-                                </header>
-
-                                <div>
-                                    <div class="row">
-
-                                         <div class="col-sm-6">
-                                             <p>
-                                                <strong>@lang('app.invoice_to'):</strong>
-                                             </p>
-                                            <address>
-                                                   {{$invoice->CustomerData->address}}
-                                                    <br>
-                                                   <strong>@lang('app.phone'):</strong>
-                                                    {{$invoice->CustomerData->phone}}
-                                                   <br>
-                                                   <strong>@lang('app.email'):</strong>
-                                                     {{$invoice->CustomerData->email}}
-                                                   <br>
-
-                                            </address>
-
-
-                                         </div>
-
-                                         <div class="col-sm-6 to_right">
-																					 <div class="invoice_details">
-                                            <p>
-                                              <span>@lang('app.invoice_date'):</span>
-																							<span>{{$invoice->invoice_date}}</span>
-																						</p>
-
-                                            <h2>@lang('app.invoice_total'):
-                                              <span>
-																								<?php
+																																	 <h3>{{$company_settings->company_name}} <br> {{$company_settings->company_address}}</h3>
+																																	 <h3>@lang('app.invoice_date') {{$invoice->invoice_date}}</h3>
+																																	 <h3>@lang('app.invoice_total') <?php
  																											$price = 0 ;
 
  																										//  print_r($invoice->services);
@@ -81,142 +35,57 @@
  																											 $price =  $price - $discount_value;
 
  																											 echo $price;
- 																							 ?>
-																							</span>
-
-
-
-																						</h2>
-                                            <h2>@lang('app.payed'):
-                                            <?php
+ 																							 ?></h3>
+																																	 <h3>@lang('app.payed') <?php
                                                       $total_payed =  App\transaction::where("transfer_type","income")->where("invoice_id",$invoice->id)->sum('transfer_amount');
                                                       echo $total_payed;
-																						 ?>
+																						 ?></h3>
+
+                                                   <h3>@lang('app.rest_amount') <?php echo $price - $total_payed; ?></h3>
 
 
 
-																						</h2>
-                                            <h2>@lang('app.rest_amount'):
-
-                                             <?php echo $price - $total_payed; ?>
-
-																						</h2>
-
-                                         </div>
-																				</div>
-
-
-                                    </div>
-
-
-
-                                </div>
+																															 </div>
+																													 </div><hr>
+																													 <!-- end of invoice info -->
 
 
 
 
-                              </div>
 
-                             <div class="row dataTables">
+																													 <div class=" col-lg-12 custyle">
 
-															 <table class="table table-striped m-table">
-															 <tbody>
-																	 <tr>
-																			 <th>
+																															 <table class="table table-striped custab"  style="    margin-bottom: 200px;">
+																																	 <thead>
+																																		 <tr>
+																																			 <th scope="col">	@lang('app.service_name')</th>
+																																			 <th scope="col">	@lang('app.qty')</th>
+																																			 <th scope="col">@lang('app.price')</th>
+																																			 <th scope="col"> @lang('app.total')</th>
+																																		 </tr>
+																																	 </thead>
+																																	 <tbody>
+																																		  @foreach ($invoice->services as $key => $inv)
+																																		 <tr>
+																																			 <td data-label="@lang('app.service_name')">{{App\service::find($inv->pivot->service_id)->title}}</td>
+																																			 <td data-label="@lang('app.qty')"> {{$inv->pivot->qty}}</td>
+																																			 <td data-label="@lang('app.price')"> {{$inv->pivot->price}}</td>
+																																			 <td data-label="@lang('app.total')"> {{$inv->pivot->price * $inv->pivot->qty}}</td>
 
-																			 </th>
-																			 <th>
-																					@lang('app.service_name')
-																			 </th>
+																																		 </tr>
+																																		  @endforeach
+																																		 <tr>
+																																			 <td scope="row" data-label="@lang('app.service_name')"></td>
+																																			 <td data-label="@lang('app.qty')"></td>
+																																			 <td data-label="@lang('app.price')">subtotal</td>
+																																			 <td data-label="@lang('app.total')"><?php  echo  $price;  ?></td>
 
-																			 <th>
-																				 	@lang('app.qty')
-																			 </th>
-
-																			 <th>
-																					@lang('app.price')
-																			 </th>
-
-																			 <th style="text-align:right;">
-																				 @lang('app.total')
-																			</th>
-
-
-																			 <th></th>
-																			 <th></th>
-																	 </tr>
-
-																			 @foreach ($invoice->services as $key => $inv)
-
-																			 <tr>
-																					 <th scope="row">
-
-
-																					 </th>
-
-																					 <td>
-																							 {{App\service::find($inv->pivot->service_id)->title}}
-																					 </td>
-
-																					 <td>
-
-																							 {{$inv->pivot->qty}}
-																					 </td>
-
-																					 <td>
-																							  {{$inv->pivot->price}}
-																					 </td>
-
-																					 <td style="text-align:right;">
-																							 {{$inv->pivot->price * $inv->pivot->qty}}
-																					</td>
-
-
-																					 <td>
-
-																					 </td>
-
-
-																			 </tr>
-
-
-
-																			 @endforeach
-
-
-
-															 </tbody>
-															 </table>
-
-                               <div style="width:50%;float:left;">
-
-															 </div>
-
-															 <div style="width: 46%;">
-																	 <table class="table table-striped m-table">
-																			 <tr>
-																				 <th scope="row">
-
-
-																				 </th>
-																					<td>Sub Total</td>
-																					<td></td>
-
-
-																					<td><span class="total_price"><?php  echo  $price;  ?></span></td>
-																			 </tr>
-
-																			 <tr>
-																				 <th scope="row">
-
-
-																				 </th>
-																					<td>Discount</td>
-																					<td></td>
-
-
-																					<td><span class="discount_total">
-																					 <?php
+																																		 </tr>
+																																		 <tr>
+																																			 <td data-label="@lang('app.service_name')"> </td>
+																																			 <td data-label="@lang('app.qty')"></td>
+																																			 <td data-label="@lang('app.price')">Discount</td>
+																																			 <td data-label="@lang('app.total')"> <?php
 
 																							 $discount_value = $invoice->discount_amount;
 																							 if($invoice->discount_type != "amount")
@@ -227,26 +96,18 @@
 																							 echo $discount_value;
 
 																						?>
+</td>
+																																		 </tr>
+																																		 <tr>
+																																			 <td scope="row" data-label="Acount"></td>
+																																			 <td data-label="Due Date"></td>
+																																			 <td data-label="Amount">Total</td>
+																																			 <td data-label="Amount"><?php  echo $price -  $discount_value;   ?></td>
+																																		 </tr>
+																																	 </tbody>
+																																 </table>
 
-																					</span></td>
-																			 </tr>
-
-																			 <tr>
-																				 <th scope="row">
-
-
-																				 </th>
-																					<td>Total</td>
-																					<td></td>
-
-																					<td><span class="all_total_val"><?php  echo $price *  $discount_value;   ?></span></td>
-																			 </tr>
-																	 </table>
-
-															 </div>
+																															 </div>
 
 
-														 </div>
-
-
-													 </div>							
+													 </div>

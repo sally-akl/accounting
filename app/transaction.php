@@ -26,6 +26,12 @@ class transaction extends Model
     {
         return $this->belongsTo('App\invoice');
     }
-
-
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
+    public function majorData()
+    {
+        return $this->belongsTo('App\emplyee_major','emp_major_id');
+    }
 }

@@ -32,7 +32,8 @@ class QuoteRequest extends FormRequest
             'quote_discount'=>'integer',
             'quote_discount_type'=>'string',
             'quote_txt'=>'string',
-            'quote_customer'=>'string'
+            'quote_customer'=>'string',
+            'currency'=>'required'
            ];
     }
 }

@@ -1,126 +1,77 @@
 @extends('layouts.master')
 
 @section('content')
-
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.update_user')
-																		</h3>
-																	</div>
-																</div>
-															</div>
-
-
-                            @include("utility.error_messages")
-
-
-                              <form method="POST" action='{{url("user/{$user->id}")}}'>
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-
-																																	<div class="form-group m-form__group">
-																																			<label for="exampleInputEmail1">
-																																				{{ __('Name') }}  :
-																																			</label>
-																																			<input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}  m-input" name="name" value="{{ $user->name }}" required autofocus>
-
-																																			@if ($errors->has('name'))
-																																					<span class="invalid-feedback" role="alert">
-																																							<strong>{{ $errors->first('name') }}</strong>
-																																					</span>
-																																			@endif
-
-																																	</div>
-
-																																	<div class="form-group m-form__group">
-																																			<label for="exampleInputEmail1">
-																																			{{ __('E-Mail Address') }}  :
-																																			</label>
-																																				<input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }} m-input" name="email" value="{{$user->email}}" required>
-
-																																				@if ($errors->has('email'))
-																																						<span class="invalid-feedback" role="alert">
-																																								<strong>{{ $errors->first('email') }}</strong>
-																																						</span>
-																																				@endif
-
-																																	</div>
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> <i class="far fa-edit"></i> @lang('app.update_user')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action='{{url("user/{$user->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																                     @csrf
 
 
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.update_user') }}">
+																											 <div class="form-group row">
+																															 <label class="col-sm-3 form-control-label label-sm">  {{ __('Name') }} </label>
+																															 <div class="col-sm-9">
+																																	 <input id="inputHorizontalSuccess" name="name" value="{{ $user->name }}" required autofocus   class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }} " type="text">
+																																	 @if ($errors->has('name'))
+																																			<span class="invalid-feedback" role="alert">
+																																					<strong>{{ $errors->first('name') }}</strong>
+																																			</span>
+																																	@endif
+																															 </div>
+																													 </div>
 
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
+																													 <div class="form-group row">
+																																	 <label class="col-sm-3 form-control-label label-sm">   {{ __('E-Mail Address') }}</label>
+																																	 <div class="col-sm-9">
+																																			 <input id="inputHorizontalSuccess" name="email" value="{{$user->email}}" required  class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }} " type="text">
+																																			 @if ($errors->has('email'))
+																																				 <span class="invalid-feedback" role="alert">
+																																						 <strong>{{ $errors->first('email') }}</strong>
+																																				 </span>
+																																		 @endif
+																																	 </div>
+																															 </div>
 
-                                                          </form>
+
+																															 <div class="form-group row">
+																																<label class="col-sm-3 form-control-label label-sm">	@lang('app.branch_name')</label>
+																																<div class="col-sm-9">
+																																		<select name="branch_name" class="form-control {{ $errors->has('branch_name') ? ' is-invalid' : '' }}">
+
+
+																																								@foreach ($branches as $key => $branch)
+																																									<option value="{{$branch->id}}" {{$user->branch_id == $branch->id ?"selected":""}}>{{$branch->branch_title}}</option>
+																																								@endforeach
+
+																																		</select>
+
+																																</div>
+																														</div>
 
 
 
-														</div>
-														<!--end::Portlet-->
+																									 <button type="submit" class="btn btn-primary">{{ __('update_user') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-
-@endsection
-
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.update_user')
-											</h3>
-
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/user")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.user')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("user/{$user->id}/edit")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.update_user')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
 @endsection

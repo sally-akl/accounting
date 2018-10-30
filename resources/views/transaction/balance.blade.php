@@ -2,65 +2,30 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
 
-                                      @lang('app.balance_sheet')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+                  <section id="add-table">
+                    <div class="container-fluid">
+                      <div class="row align-items-center justify-content-center">
+                          <div class="card col-lg-12 custyle">
+                            <div class="row">
+                              <div class="col-lg-12 mg-top25">
+                                <label class="form-control-label"><i class="fas fa-cog"></i>  @lang('app.balance_sheet')</label>
+                              </div>
+                            </div>
+														  @include("utility.sucess_message")
+                              <table class="table table-striped custab">
+                              <thead>
 
-                                @include("utility.sucess_message")
-
-                                                            <div class="row toolss">
-
-																															<div class="col-xl-6">
-
-                                                                </div>
-
-
-
-
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
-
-                                                                        </th>
-                                                                        <th>
-                                                                          @lang('app.bank_name')
-                                                                        </th>
-
-																																				<th>
-                                                                          @lang('app.balance')
-                                                                        </th>
-
-
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($accounts as $key => $account)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$account->bank_name}}
-																																						</td>
-
-																																						<td>
-                                                                              <?php
+                                  <tr style="text-align: center;">
+                                      <th>@lang('app.bank_name')</th>
+                                      <th class="text-center">  @lang('app.balance')</th>
+																			  <th></th>
+                                  </tr>
+                              </thead>
+															       @foreach ($accounts as $key => $account)
+                                      <tr style="text-align: center;">
+                                          <td data-label="@lang('app.bank_name')">	{{$account->bank_name}}</td>
+                                          <td data-label=" @lang('app.balance')">  <?php
 
                                                                                 $income_amount =   $account->transactions->where("transfer_type","income")->sum("transfer_amount");
 																																								$expense_amount =   $account->transactions->where("transfer_type","expense")->sum("transfer_amount");
@@ -70,63 +35,16 @@
 																																								$total = ($account->open_balance + $income_amount + $transfer_amount) - $expense_amount;
 																																								echo $total;
 
-																																							 ?>
-																																						</td>
+																																							 ?></td>
+																					  <td>	<a href='{{url("transactions/{$account->id}/balanceDetails")}}/{{app()->getLocale()}}'>@lang('app.Details')</a></td>
+                                      </tr>
+																			  @endforeach
 
+                              </table>
 
-																																						<td>
-
-																																							<a href='{{url("transactions/{$account->id}/balanceDetails")}}'>Details</a>
-
-																																						</td>
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.balance_sheet')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+                              </div>
+                      </div>
+                    </div>
+                  </section>
 
 @endsection

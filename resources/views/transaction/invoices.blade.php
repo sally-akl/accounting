@@ -2,169 +2,96 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-                                       @lang('app.paid_invoices')
-																		</h3>
-																	</div>
-																</div>
-															</div>
-
-                                @include("utility.sucess_message")
-
-                                                            <div class="row toolss">
-
-																															<div class="col-xl-6">
-
-                                                                </div>
 
 
+							 <section id="add-table">
+								 <div class="container-fluid">
+									 <div class="row align-items-center justify-content-center">
+											 <div class="card col-lg-12 custyle">
+												 <div class="row">
+													 <div class="col-lg-12 mg-top25">
+														 <label class="form-control-label"> <i class="fas fa-cog"></i>  @lang('app.paid_invoices')</label>
+													 </div>
+												 </div>
+												 @include("utility.sucess_message")
+												 <table class="table table-striped custab">
 
+													 <thead>
+														 <tr>
+															   <th>
+                                    @lang('app.customer_name')
+                                 </th>
 
-                                                            </div>
+																	<th>
+																		@lang('app.customer_amount')
+																	</th>
 
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
+																		<th>
+																			@lang('app.customer_invoice_date')
+																		</th>
 
-                                                                        </th>
-                                                                        <th>
-                                                                          @lang('app.customer_name')
-                                                                        </th>
+                                    <th>
+                                      @lang('app.invoice_status')
+                                    </th>
 
-																																				<th>
-																																					@lang('app.customer_amount')
-																																				</th>
+																		<th scope="col">
+																			@lang('app.submit_user_name')
+																	 </th>
 
-																																				<th>
-																																					@lang('app.customer_invoice_date')
-																																				</th>
+															 <th scope="col"></th>
 
-                                                                        <th>
-                                                                          @lang('app.invoice_status')
-                                                                        </th>
+														 </tr>
+													 </thead>
+													 <tbody>
 
+                               @foreach ($invoices as $key => $invoice)
 
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($invoices as $key => $invoice)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$invoice->CustomerData->full_name}}
-																																						</td>
-
-																																						<td>
-                                                                                 <?php
+														 <tr>
+															 <td data-label="@lang('app.customer_name')">	{{clean($invoice->CustomerData->full_name)}}</td>
+															 <td data-label="@lang('app.customer_amount')"> <?php
                                                                                         $price = 0 ;
 
                                                                                       //  print_r($invoice->services);
                                                                                        foreach ($invoice->services as $key => $service)
                                                                                          {
                                                                                             if($service->pivot->invoice_type == $invoice->invoice_item_type)
-                                                                                              $price += $service->pivot->price;
+                                                                                              $price += clean($service->pivot->qty) * clean($service->pivot->price);
 
                                                                                          }
 
-                                                                                         $discount_value = $invoice->discount_amount;
+                                                                                         $discount_value = clean($invoice->discount_amount);
                                                                                          if($invoice->discount_type != "amount")
 																																												 {
-																																													    $discount_value = ($price * $invoice->discount_amount) /100;
+																																													    $discount_value = ($price * clean($invoice->discount_amount)) /100;
 																																												 }
 																																												 $price =  $price - $discount_value;
 
                                                                                          echo $price;
                                                                                  ?>
 
+</td>
+ <td data-label="@lang('app.customer_invoice_date')">	{{ date("Y-m-d",strtotime($invoice->invoice_date))}}</td>
+  <td data-label="@lang('app.invoice_status')">	  {{clean($invoice->invoice_status)}}</td>
 
+	<td data-label="@lang('app.submit_user_name')">	{{$invoice->users != null ?$invoice->users->name:""	}}
 
-																																						</td>
+	</td>
 
-																																						<td>
-                                                                               	{{ date("Y-m-d",strtotime($invoice->invoice_date))}}
+															 <td class="text-center">
+																 <a href='{{url("transactions/{$invoice->id}/invoicesDetails")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.Details')</a>
 
-																																						</td>
-
-
-
-                                                                            <td class="balanceColor">
-                                                                               <span class="m-badge m-badge--success m-badge--wide">
-                                                                                  {{$invoice->invoice_status}}
-                                                                                 </span>
-                                                                             </td>
-
-																																						 <td>
-
- 																																							<a href='{{url("transactions/{$invoice->id}/invoicesDetails")}}'>Details</a>
-
- 																																						</td>
+															 </td>
+														 </tr>
+														   @endforeach
 
 
 
-																																						<td>
+													 </tbody>
+												 </table>
 
-																																						</td>
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$invoices->links('vendor.pagination.default')}}
-
-
-														</div>
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-										   	@lang('app.paid_invoices')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
-
+													  {{$invoices->links('vendor.pagination.default')}}
+													 </div>
+									 </div>
+								 </div>
+							 </section>
 @endsection

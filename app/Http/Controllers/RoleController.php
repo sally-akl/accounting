@@ -9,11 +9,12 @@ use App\role;
 use App\User;
 use App\rolepermission;
 use Session;
+use App\Http\Requests\RoleRequest;
 class RoleController extends Controller
 {
 
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
         $roles = role::where('id','!=',1)->orderBy("id","desc")->paginate($this->pagination_num);
@@ -22,7 +23,8 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view('roles.add');
+        $roles = role::all();
+        return view('roles.add',compact('roles'));
     }
 
     /**
@@ -31,13 +33,15 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
          $role = new role();
          $role->title = $request->title;
+         $role->parent = $request->parent;
          $role->save();
-         return redirect('/roles/permissions/'. $role->id);
-         return redirect('/roles')->with("message",trans('app.add_sucessfully'));
+         return redirect('/roles/permissions/'. $role->id."/".app()->getLocale()."?branch=".$request->query('branch'));
+
+         //return redirect('/roles')->with("message",trans('app.add_sucessfully'));
     }
 
     /**
@@ -61,7 +65,8 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = role::find($id);
-        return view('roles.update',compact('role'));
+        $roles = role::all();
+        return view('roles.update',compact('role','roles'));
     }
     /**
      * Update the specified resource in storage.
@@ -70,12 +75,13 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
         $role = role::find($id);
         $role->title = $request->title;
+        $role->parent = $request->parent;
         $role->save();
-        return redirect('/roles/permissions/'. $role->id);
+        return redirect('/roles/permissions/'. $role->id."/".app()->getLocale()."?branch=".$request->query('branch'));
         //return redirect('/roles')->with("message",trans('app.update_sucessfully'));
     }
 
@@ -107,14 +113,16 @@ class RoleController extends Controller
          $permission->code = $request->code;
          $permission->module_id = $request->module_id;
          $permission->save();
-         return redirect('/roles/createpermission');
+         return redirect('/roles/createpermission'."/".app()->getLocale());
     }
 
     public function user_roles($id)
     {
         $role = role::find($id);
         $user_roles = $role->users;
-        $users = user::where('id','!=',1)->get();
+        $users = user::whereNOTIn('id',function($query){
+               $query->select('user_id')->from('users_roles');
+            })->get();
         return view('roles.user_roles',compact('user_roles','role','users'));
     }
 
@@ -146,11 +154,8 @@ class RoleController extends Controller
                $role_permissions->permission_id = $perm;
                $role_permissions->save();
            }
-           return redirect('/roles')->with("message",trans('app.add_sucessfully'));
+          return redirect('/roles/user/'. $request->role_val."/".app()->getLocale()."?branch=".$request->query('branch'));
         }
     }
-
-
-
 
 }

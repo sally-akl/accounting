@@ -24,9 +24,24 @@ class ExtraSalaryRequest extends FormRequest
     public function rules()
     {
         return [
-          'title'=>'required|max:225',
+          'sal_min_extra'=>'required|integer',
           'emp_m_id'=>'required|integer',
-          'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          //'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ];
+    }
+
+    public function response(array $errors)
+    {
+        $transformed = [];
+        foreach ($errors as $field => $message) {
+            $transformed[] = [
+                'field' => $field,
+                'message' => $message[0]
+            ];
+        }
+
+        if($this->is_ajax = 1)
+           return response()->json(['errors' => $transformed], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        return $errors;
     }
 }

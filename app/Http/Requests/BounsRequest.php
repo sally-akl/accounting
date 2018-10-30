@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\customRules\CheckIfAlreadySalaryPayment;
 
 class BounsRequest extends FormRequest
 {
@@ -25,8 +26,10 @@ class BounsRequest extends FormRequest
     {
         return [
           'bdate'=>'date',
+          'sal_min_extra'=>'required|integer',
           'emp_m_id'=>'required|integer',
-          'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          'majoremployee_month_year'=> [new CheckIfAlreadySalaryPayment]
+          //'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ];
     }
 }

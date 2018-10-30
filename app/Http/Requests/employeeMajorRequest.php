@@ -28,11 +28,14 @@ class employeeMajorRequest extends FormRequest
         return [
           'employee_val'=>'required|integer',
           'major_val'=>'required|integer',
-          'join_date'=>'date',
+          'join_date'=>'required|date',
           'is_current'=>'string',
           'salary'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
           'compond_emp_major'=> [new EmployeeMajorNotRepeat],
+          'branch_name'=>'required',
+          'currency'=>'required'
           //'compond_emp_major_current'=> [new EmployeeCurrent],
         ];
     }
+
 }

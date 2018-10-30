@@ -1,213 +1,217 @@
 @extends('layouts.master')
 
 @section('content')
+<section id="add-form">
+										 <div class="container-fluid">
+												 <div class="row align-items-center justify-content-center">
+														 <div class="card col-lg-12 padding20">
+															 <div class="row">
+															 <div class="col-lg-6">
+																		 <label class=" form-control-label"><i class="fa fa-search" aria-hidden="true"></i> @lang('app.Search')</label>
+																	 </div>
+																	 </div>
+																	 <div class="row">
+																		 <div class="col-lg-12 mg-top25">
+																				 	 @include("customer.search")
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
+																					 </div>
+																				 </div>
 
-                                      @lang('app.list_of_customer')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+														 </div>
+												 </div>
+										 </div>
+								 </section>
 
-                                @include("utility.sucess_message")
+							 <section id="add-table">
+								 <div class="container-fluid">
+									 <div class="row align-items-center justify-content-center">
+											 <div class="card col-lg-12 custyle">
+												 <div class="row">
+													 <div class="col-lg-12 mg-top25">
+														 <label class="form-control-label"><i class="fas fa-cog"></i>   @lang('app.list_of_customer')</label>
+														 <a href="{{ url('customer/create') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}" style="display:inline">
+														     <button type="button" class="btn btn-primary"><i class="fas fa-plus" style="margin-right: 6px;"></i>@lang('app.new_customer')</button>
+													   </a>
 
-                                                            <div class="row toolss">
+														 @include("plugins.ajax_add_city")
+													 </div>
+												 </div>
+												 @include("utility.sucess_message")
+												 <table class="table table-striped custab">
 
-																															<div class="col-xl-6">
-                                                                    <button type="button" class="inputSearchYellow"><i class="fa fa-search"></i> Search</button>
-                                                                </div>
+													 <thead>
+														 <tr>
+															 <th scope="col">
+																	   @lang('app.customer_name')
+															  </th>
+                                <th scope="col">
+																	  @lang('app.customer_email')
+																 </th>
+																 <th scope="col">
+																		@lang('app.customer_phone')
+																 </th>
 
+																 <th scope="col">
+																		@lang('app.branch_name')
+															 </th>
 
-                                                                <div class="col-xl-6">
-                                                                    <div class="btnAQ">
-                                                                        <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push toolsmenu" m-dropdown-toggle="hover" aria-expanded="true">
-                                                                      <!--  <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--outline-2x m-btn--air m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle" id="delett">
-                                                                            <i class="la la-plus m--hide"></i>
-                                                                            <i class="la la-ellipsis-h"></i>
-                                                                        </a>
-																																			-->
-                                                                        <div class="m-dropdown__wrapper ">
-                                                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                                                            <div class="m-dropdown__inner deleteAllItem">
-                                                                                <div class="m-dropdown__body deletebody">
-                                                                                    <div class="m-dropdown__content">
-                                                                                        <ul class="m-nav">
-                                                                                            <li class="m-nav__section m-nav__section--first m--hide">
-                                                                                                <span class="m-nav__section-text">
-                                                                                                    Quick Actions
-                                                                                                </span>
-                                                                                            </li>
-                                                                                            <li class="m-nav__item">
-                                                                                                <a href="" class="m-nav__link">
-                                                                                                    <span class="m-nav__link-text">
-                                                                                                        <i class="la la-trash"></i> Delete All
-                                                                                                    </span>
-                                                                                                </a>
-                                                                                            </li>
-
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                        <a href="{{ url('customer/create') }}">
-                                                                            <button type="button" class="btnNew"><i class="fa fa-plus"></i>@lang('app.new_customer')</button>
-                                                                        </a>
-                                                                </div>
-                                                                </div>
+																 <th scope="col">
+																		@lang('app.submit_user_name')
+																 </th>
 
 
-																																<div class="row advancedSearch">
-																																	 @include("customer.search")
-																										         	</div>
+															 <th scope="col"></th>
 
+														 </tr>
+													 </thead>
+													 <tbody>
 
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
+                                @foreach ($customer as $key => $c)
 
-                                                                        </th>
-                                                                        <th>
-                                                                          @lang('app.customer_name')
-                                                                        </th>
-																																				<th>
-                                                                          @lang('app.customer_email')
-                                                                        </th>
-																																				<th>
-																																					@lang('app.customer_phone')
-																																				</th>
+														 <tr>
+															 <td data-label="@lang('app.customer_name')">	{{clean($c->full_name)}}</td>
+															 <td data-label=" @lang('app.customer_email')">
+																			{{clean($c->email)}}
+                                </td>
+																<td data-label="	@lang('app.customer_phone')">
+																		{{clean($c->phone_}}
+																 </td>
 
+																 <td data-label="@lang('app.branch_name')">	{{ \App\branch::find($c->branch_id)!=null? clean(\App\branch::find($c->branch_id)->branch_title):""}}
+																</td>
 
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
+																 <td data-label="@lang('app.submit_user_name')">		{{$c->users != null ?$c->users->name:""	}}
 
-                                                                        @foreach ($customer as $key => $c)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$c->full_name}}
-																																						</td>
-
-																																						<td>
-																																								{{$c->email}}
-																																						</td>
-
-																																						<td>
-																																								{{$c->phone}}
-																																						</td>
+																 </td>
 
 
 
-																																						<td>
+															 <td class="text-center">
+																 <a class='btn btn-info btn-xs' href='{{url("customer/{$c->id}/edit")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																	 <i class="far fa-edit"></i>
+																 </a>
+																 <a href="#" class="btn btn-danger btn-xs deleted_btn"  data-title="{{$c->id}}">
+																	 <i class="far fa-trash-alt"></i>
+																 </a>
 
-																																						</td>
-																																						<td>
-																																							<a href="#" class="deleted_btn" data-title="{{$c->id}}">	<i class="la la-trash"></i> </a>
+																 <div class="dropdown" style="top: -38px;right:94px;">
+																		 <button type="button" class="btn btn-success dropdown-toggle top-controls" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																				 @lang('app.operation')
+																		 </button>
+																		 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                          <a class='dropdown-item' href='{{url("invoice/customer/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.Invoices')</a>
+																					<a class='dropdown-item' href='{{url("quote/customer/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.Quote')</a>
+				 																  <a class='dropdown-item' href='{{url("customerrequests/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.customer_requests')</a>
+				 																  <a class='dropdown-item' href='{{url("customercomplain/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.customer_complains')</a>
+																					@if(Auth::user()->AllowToPath("add_invoices"))
+																					<a class='dropdown-item' href='{{url("invoice/create/{$c->id}/tocustomer")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>@lang('app.add_new_invoices')</a>
+																					@endif
 
-																																							<a href='{{url("customer/{$c->id}/edit")}}'>	<i class="la la-edit"></i></a>
-																																							<a href='{{url("customer/{$c->id}/show")}}'>	<i class="la la-eye" data-toggle="modal" data-target="#m_modal_6"></i></a>
-                                                                              <a href='{{url("invoice/customer/{$c->id}")}}'>Invoices</a>
-																																							<a href='{{url("quote/customer/{$c->id}")}}'>Quote</a>
+																					@if(Auth::user()->AllowToPath("add_customer_request"))
+																					<a class='dropdown-item add_customer_request_compl' data-hr='{{url("customerrequests/create/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}' href='#'>@lang('app.add_customer_request')</a>
+																					@endif
 
-
-																																						</td>
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$customer->links('vendor.pagination.default')}}
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-														<script type="text/javascript">
-															 $(".deleted_btn").on("click",function(){
-
-																 var id = $(this).attr("data-title");
-																 var url_delete = '{{url("customer/index")}}'+"/"+id
-																					$.ajax({url: url_delete , success: function(result){
-
-																						   result = JSON.parse(result);
-																						   console.log(result);
-																							 if(result.sucess)
-																							 {
-																								   window.location.href = '{{url("/customer")}}';
-																							 }
-																						}});
-
-																 })
+																					@if(Auth::user()->AllowToPath("add_customer_request"))
+																					<a class='dropdown-item add_customer_request_compl' data-hr='{{url("customercomplain/create/{$c->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}' href='#'>@lang('app.add_customer_complain')</a>
+																					@endif
+																		 </div>
+																	 </div>
 
 
 
-														</script>
+
+															 </td>
+														 </tr>
+														   @endforeach
+
+
+
+													 </tbody>
+												 </table>
+
+													  {{$customer->links('vendor.pagination.default')}}
+													 </div>
+									 </div>
+								 </div>
+							 </section>
 
 @endsection
 
 
-@section('subhead')
+@section('footerjscontent')
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_customer')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/customer")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.customer')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
+<script type="text/javascript">
+							 $(".deleted_btn").on("click",function(){
 
-											</ul>
-										</div>
-										<div>
+								 var id = $(this).attr("data-title");
+								 var url_delete = '{{url("customer/index")}}'+"/"+id+'/{{app()->getLocale()}}'
+													$.ajax({url: url_delete , success: function(result){
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+															 result = JSON.parse(result);
+															 console.log(result);
+															 if(result.sucess)
+															 {
+																	 window.location.href = '{{url("/customer")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}';
+															 }
+														}});
+
+								 });
+
+
+								 $(".add_customer_request_compl").on("click",function(){
+
+								        var create_form_url = $(this).attr("data-hr");
+								        $.ajax({url: create_form_url , success: function(result){
+								                  $(".create_body_content").html(result);
+								                  $('#pop_ups_modals').modal();
+
+								                  $(".add_extra_salary_btn").submit(function(e){
+
+								                       e.preventDefault();
+								                       var submit_form_url = $(this).attr('action');
+								                       var formData = new FormData($(this)[0]);
+								                       $(".alert-success").css("display","none");
+								                       $(".alert-danger").css("display","none");
+								                       $.ajax({
+								                            url: submit_form_url,
+								                            type: 'POST',
+								                            data: formData,
+								                            async: false,
+								                            dataType: 'json',
+								                            success: function (response) {
+
+																							$(".alert-success").html("Sucessfully Added");
+																							$(".alert-success").css("display","block");
+																								setTimeout(function(){location.reload(); }, 2000);
+								                            },
+																						error : function( data )
+																						{
+																								if( data.status === 422 )
+																								{
+
+																										var $error_text = "";
+																										var errors = $.parseJSON(data.responseText);
+																										$.each(errors.errors, function (key, value) {
+																												 $error_text +=value+"<br>";
+																										 });
+
+																										$(".alert-danger").html($error_text);
+																										$(".alert-danger").css("display","block");
+
+																								}
+
+																						},
+								                            cache: false,
+								                            contentType: false,
+								                            processData: false
+								                        });
+
+								                        return false;
+								                   });
+
+								       }});
+								  });
+
+						</script>
 
 @endsection

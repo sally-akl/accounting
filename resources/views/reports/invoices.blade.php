@@ -1,218 +1,162 @@
 @extends('layouts.master')
 
 @section('content')
+<section id="add-form">
+				 <div class="container-fluid">
+					 <div class="row">
+						 <div class="card col-lg-8 " style="padding: 13px;">
+							 <div class="row">
+								 <div class="col-lg-3 mg-top25">
+									 <label class=" form-control-label"><i class="fa fa-search" aria-hidden="true"></i>@lang('app.Search')</label>
+								 </div>
+							 </div>
+							 <div class="row">
+								 <div class="col-lg-12 mg-top30">
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
+									 @include("reports.invoice_search")
+								 </div>
+							 </div>
 
-																				 @lang('app.list_of_invoices')
-
-																		</h3>
-																	</div>
-																</div>
-															</div>
-
-                                @include("utility.sucess_message")
-
-																<div class="row">
-																	<div class="col-xl-3" style="margin-left: 81px;">
-
-																		<div class="row incomesStat   statDashboard2 mx-auto" style="margin-top:10px;width: 266px;">
-																				<div class="col-xl-2 iconStat">
-
-																				</div>
-																				<div class="col-xl-10">
-																						<h2>{{$invoice_num}}</h2>
-																						<p>Total</p>
-																				</div>
-																		</div>
-
-																	</div>
-																	<div class="col-xl-3" style="margin-left: 81px;">
-
-																		<div class="row incomesStat   statDashboard2 mx-auto" style="margin-top:10px;width: 266px;">
-																				<div class="col-xl-2 iconStat">
-
-																				</div>
-																				<div class="col-xl-10">
-																						<h2>{{count($total_paid)>0 ?$total_paid[0]->price_total:0}}</h2>
-																						<p>Total paid amount</p>
-																				</div>
-																		</div>
-
-																	</div>
+						 </div>
+						 <div class="col-lg-4">
 
 
 
-																</div>
-
-                                                            <div class="row toolss">
-
-																															<div class="col-xl-6">
-                                                                    <button type="button" class="inputSearchYellow"><i class="fa fa-search"></i> Search</button>
-                                                                </div>
-
-
-                                                                <div class="col-xl-6">
-                                                                    <div class="btnAQ">
-                                                                        <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push toolsmenu" m-dropdown-toggle="hover" aria-expanded="true">
-
-
-                                                                    </div>
-
-                                                                </div>
-                                                                </div>
+							 <div class="col-lg-12">
+								 <div class="row blue2">
+									 <div class="col-2 col-xl-2">
+										 <i style="color: #dedede66;font-size: 70px;line-height: 1.3;" class="fas fa-long-arrow-alt-up"></i>
+									 </div>
+									 <div class="col-10 col-xl-10">
+										 <h1>{{$invoice_num}}</h1>
+										 <br>
+										 <p>@lang('app.Total')</p>
+									 </div>
+								 </div>
 
 
-																																<div class="row advancedSearch">
-                                                                      @include("reports.invoice_search")
-																										         	  </div>
+							 </div>
+
+							 <div class="col-lg-12">
+
+								 <div class="row green2">
+									 <div class="col-2 col-xl-2">
+										 <i style="color: #dedede66;font-size: 70px;line-height: 1.3;" class="fas fa-long-arrow-alt-up"></i>
+									 </div>
+									 <div class="col-10 col-xl-10">
+										 <h1>{{$total_paid}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</h1>
+										 <br>
+										 <p>@lang('app.Total_paid_amount')</p>
+									 </div>
+
+								 </div>
 
 
-                                                            </div>
+							 </div>
 
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
+						 </div>
+					 </div>
+				 </div>
+			 </section>
 
-                                                                        </th>
-                                                                        <th>
-                                                                          @lang('app.customer_name')
-                                                                        </th>
-
-																																				<th>
-																																					@lang('app.customer_amount')
-																																				</th>
-
-																																				<th>
-																																					@lang('app.customer_invoice_date')
-																																				</th>
-
-                                                                        <th>
-                                                                          @lang('app.invoice_status')
-                                                                        </th>
+			 <section id="add-table">
+				 <div class="container-fluid">
+					 <div class="row align-items-center justify-content-center">
+						 <div class="card col-lg-12 custyle">
+							 <div class="row">
+								 <div class="col-lg-12 mg-top25">
+									 <label class="form-control-label"> @lang('app.list_of_invoices')</label>
+								 </div>
+							 </div>
+							 <table class="table table-striped custab">
+								 <thead>
+									 <tr>
+										 <th>
+																																				 @lang('app.customer_name')
+																																			 </th>
 
 
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
 
-                                                                        @foreach ($invoices as $key => $invoice)
+																																			 <th>
+																																				 @lang('app.customer_invoice_date')
+																																			 </th>
 
-																																				<tr>
-																																						<th scope="row">
+																																			 <th>
+																																				 @lang('app.invoice_status')
+																																			 </th>
+
+																																			 <th scope="col">
+																																				 @lang('app.submit_user_name')
+																																			</th>
+
+																																			 <th>
+																																				@lang('app.customer_amount_invoice')
+																																			</th>
 
 
-																																						</th>
+									 </tr>
+								 </thead>
+								 <tbody>
+									   @foreach ($invoices as $key => $invoice)
+									 <tr>
+										 <td data-label="@lang('app.customer_name')">	{{clean($invoice->CustomerData->full_name)}}</td>
 
-																																						<td>
-																																								{{$invoice->CustomerData->full_name}}
-																																						</td>
+										 <td data-label="@lang('app.customer_invoice_date')">	{{ date("Y-m-d",strtotime($invoice->invoice_date))}}</td>
+										 <td data-label="@lang('app.invoice_status')">  {{clean($invoice->invoice_status)}}</td>
+										 <td data-label="@lang('app.submit_user_name')">	{{$invoice->users != null ?$invoice->users->name:""	}}
 
-																																						<td>
-                                                                                 <?php
+										 </td>
+
+										 <td data-label="@lang('app.customer_amount_invoice')"> <?php
                                                                                         $price = 0 ;
 
                                                                                       //  print_r($invoice->services);
                                                                                        foreach ($invoice->services as $key => $service)
                                                                                          {
                                                                                             if($service->pivot->invoice_type == $invoice->invoice_item_type)
-                                                                                              $price += $service->pivot->price;
+                                                                                               $price += clean($service->pivot->qty) * clean($service->pivot->price);
 
                                                                                          }
 
-                                                                                         $discount_value = $invoice->discount_amount;
+                                                                                         $discount_value = clean($invoice->discount_amount);
                                                                                          if($invoice->discount_type != "amount")
 																																												 {
-																																													    $discount_value = ($price * $invoice->discount_amount) /100;
+																																													    $discount_value = ($price * clean($invoice->discount_amount)) /100;
 																																												 }
 																																												 $price =  $price - $discount_value;
+																																												 $cu = \App\classes\Common::getCurrencyText($invoice->currancy);
 
-                                                                                         echo $price;
+                                                                                         echo $price." ".$cu;
                                                                                  ?>
 
-
-
-																																						</td>
-
-																																						<td>
-                                                                               	{{ date("Y-m-d",strtotime($invoice->invoice_date))}}
-
-																																						</td>
+                                                  </td>
 
 
 
-                                                                            <td class="balanceColor">
-                                                                               <span class="m-badge m-badge--success m-badge--wide">
-                                                                                  {{$invoice->invoice_status}}
-                                                                                 </span>
-                                                                             </td>
+									 </tr>
+									   @endforeach
 
+								 </tbody>
+							 </table>
 
+							   {{$invoices->links('vendor.pagination.default')}}
+						 </div>
+					 </div>
+				 </div>
+			 </section>
+			 <section id="chart2">
 
-																																						<td>
-
-																																						</td>
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$invoices->links('vendor.pagination.default')}}
-
-																											<div style="height: 337px;">
-																												<div id="incomeExpenseChart" style="width: 100%;height: 100%; background-color: #FFFFFF;" ></div>
-																											</div>
-
-
-														</div>
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_invoices')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
+					<div class="col-lg-12">
+						<div class="line-chart-month card">
+								<div class="card-body">
+								 <div style="height: 337px;">
+											<div id="incomeExpenseChart" style="width: 100%;height: 100%; background-color: #FFFFFF;" ></div>
 									</div>
-								</div>
-								<!-- END: Subheader -->
+							</div>
+						</div>
+					</div>
 
+			</section>
 @endsection
 
 

@@ -42,10 +42,17 @@ class invoice extends Model
          $discount_value = $this->discount_amount;
          if($this->discount_type != "amount")
          {
-              $discount_value = ($price * $this->discount_amount) /100;
+             if($this->discount_amount != 0)
+                $discount_value = ($price * $this->discount_amount) /100;
          }
          $price =  $price - $discount_value;
          return  $price;
     }
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
+
+
 
 }

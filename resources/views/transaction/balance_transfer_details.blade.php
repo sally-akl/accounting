@@ -2,131 +2,59 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-                                      @lang('app.Transaction_Details_of')
-																			{{$account_title}}
-																		</h3>
-																	</div>
-																</div>
-															</div>
+                  <section id="add-table">
+                    <div class="container-fluid">
+                      <div class="row align-items-center justify-content-center">
+                          <div class="card col-lg-12 custyle">
+                            <div class="row">
+                              <div class="col-lg-12 mg-top25">
+                                <label class="form-control-label">  @lang('app.Transaction_Details_of')
+																			{{$account_title}}</label>
+                              </div>
+                            </div>
+														  @include("utility.sucess_message")
+                              <table class="table table-striped custab">
+                              <thead>
 
-                                @include("utility.sucess_message")
+                                  <tr>
+																		<th scope="col">@lang('app.transfer_code')</th>
+																		<th scope="col">@lang('app.transfer_type')</th>
+																		<th scope="col">@lang('app.Date')</th>
+																		<th scope="col">@lang('app.Amount')</th>
+																		<th scope="col">@lang('app.Description')</th>
+                                  </tr>
+                              </thead>
+															        @foreach ($transfers as $key => $trans)
+                                      <tr>
+																				<td data-label="@lang('app.transfer_code')">
+																					{{clean($trans->transfer_code_num)}}
+																				</td>
+                                        <td data-label="@lang('app.transfer_type')">
+																						{{clean($trans->transfer_type)}}
+																				</td>
 
-                                                            <div class="row toolss">
+																				<td data-label="@lang('app.Date')">
+																							{{$trans->transfer_date}}
+																				</td>
 
-																																<div class="row advancedSearch">
+																				<td data-label="@lang('app.Amount')">
+																							{{clean($trans->transfer_amount)}}
+																				</td>
 
-																										         	  </div>
+																				<td data-label="@lang('app.Description')">
+																					 	{{clean($trans->transfer_desc)}}
+																				</td>
 
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
+                                      </tr>
+																			  @endforeach
 
-                                                                        </th>
-																																				<th>@lang('app.transfer_code')</th>
-																																				<th>@lang('app.transfer_type')</th>
-																																				<th>@lang('app.Date')</th>
-																																				<th>@lang('app.Amount')</th>
-																																				<th>@lang('app.Description')</th>
+                              </table>
+															  {{$transfers->links('vendor.pagination.default')}}
 
+                              </div>
+                      </div>
+                    </div>
+                  </section>
 
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($transfers as $key => $trans)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$trans->transfer_code_num}}
-																																						</td>
-
-																																						<td>
-																																								{{$trans->transfer_type}}
-																																						</td>
-
-																																						<td>
-																																								{{$trans->transfer_date}}
-																																						</td>
-
-																																						<td>
-																																							{{$trans->transfer_amount}}
-																																						</td>
-
-																																						<td>
-																																						{{$trans->transfer_desc}}
-																																						</td>
-
-
-																																						<td>
-
-																																						</td>
-
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$transfers->links('vendor.pagination.default')}}
-
-
-														</div>
-														<!--end::Portlet-->
-
-
-
-@endsection
-
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.Transaction_Details_of')
-												{{$account_title}}
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
 
 @endsection

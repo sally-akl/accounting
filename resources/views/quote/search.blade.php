@@ -1,16 +1,12 @@
-<form method="get" action="{{ url('quote/search') }}" class="form-inline">
+<form method="get" action="{{ url('quote/search') }}/{{app()->getLocale()}}">
     @csrf
 
-<div class="col-xs-3">
-  <select class="form-control m-input" name="customer_val" >
-        @foreach ($customers as $key => $c)
-          <option value="{{$c->id}}">{{$c->full_name}}</option>
-        @endforeach
-  </select>
-</div>
-
-<div class="col-xs-6">
-
-    <button type="submit" class="btnSearchIcon"><i class="fa fa-search"></i></button>
-</div>
+      <div class="input-group stylish-input-group">
+          <input type="text" class="form-control"  name="subject" placeholder="Search" >
+          <span class="input-group-addon">
+              <button type="submit">
+                      <i class="fas fa-search"></i>
+          </span>
+      </div>
+        <input type="hidden" name="branch" value='{{ Request::query("branch") }}'  />
 </form>

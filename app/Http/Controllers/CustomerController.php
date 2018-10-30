@@ -16,10 +16,14 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
-        $customer = Common::CommonList('customer',$this->pagination_num ) ;
+        $query = "";
+
+        $query = customer::whereRaw('1 = 1');
+        $query = Common::user_filter_by_role($query,false,array(),"");
+        $customer = $query->orderBy("id","desc")->paginate($this->pagination_num) ;
         return view('customer.index',compact('customer'));
     }
 
@@ -28,10 +32,14 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $lay = 'customer.add';
+        if($request->ajax())
+          $lay = 'ajax.add_customer';
+
         $citites = city::all();
-        return view('customer.add',compact('citites'));
+        return view($lay,array("branches"=>Auth::user()->active_branch,"citites"=>$citites));
     }
 
     /**
@@ -48,9 +56,17 @@ class CustomerController extends Controller
          $customer->phone = $request->phone;
          $customer->address = $request->address;
          $customer->city_id = $request->city_val;
+         $customer->branch_id = $request->branch_name;
          $customer->user_id = Auth::user()->id;
          $customer->save();
-         return redirect('/customer')->with("message",trans('app.add_sucessfully'));
+
+         if($request->ajax())
+         {
+             echo json_encode(array("sucess"=>true));
+             exit();
+         }
+
+         return redirect('/customer'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
     }
 
     /**
@@ -75,7 +91,7 @@ class CustomerController extends Controller
     {
         $customer = customer::find($id);
         $citites = city::all();
-        return view('customer.update',compact('customer','citites'));
+        return view('customer.update',array("branches"=>Auth::user()->active_branch,"citites"=>$citites,"customer"=>$customer));
     }
 
     /**
@@ -93,8 +109,9 @@ class CustomerController extends Controller
         $customer->phone = $request->phone;
         $customer->address = $request->address;
         $customer->city_id = $request->city_val;
+        $customer->branch_id = $request->branch_name;
         $customer->save();
-        return redirect('/customer')->with("message",trans('app.update_sucessfully'));
+        return redirect('/customer'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -114,17 +131,19 @@ class CustomerController extends Controller
 
     public function search(Request $request)
     {
-         $name  =  $request->fullname;
-         $email =  $request->email;
-         $join_date = $request->join_date;
+         $name  =  clean($request->fullname);
+         $email =  clean($request->email);
+         $join_date = clean($request->join_date);
 
-         $customer = customer::where('full_name', 'like', '%' . $name . '%')->
-                   where('email', 'like', '%' . $email . '%')
-                   ->orderBy("id","desc")->paginate($this->pagination_num);
+          $query = customer::whereRaw('1 = 1');
+          if(!empty($name))
+            $query = $query->where('full_name', 'like', '%' . $name . '%');
+          if(!empty( $email ))
+            $query = $query->where('email', 'like', '%' . $email . '%');
 
-
-         return view('customer.index',compact('customer'));
-
+            $query = Common::user_filter_by_role($query,false,array(),"");
+            $customer = $query->orderBy("id","desc")->paginate($this->pagination_num);
+            return view('customer.index',compact('customer'));
     }
 
     public function get_address($id)

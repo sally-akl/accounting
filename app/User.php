@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','branch_id'
     ];
 
     /**
@@ -28,10 +28,48 @@ class User extends Authenticatable
     ];
     protected $main_role = "admin";
 
+    public $branches;
+    public $active_branch;
+
     public function roles()
     {
        return $this->belongsToMany('App\role', 'users_roles','user_id','role_id');
     }
+
+    public function hasChildRoles()
+    {
+        $child_roles =   $this->roles()->join("roles as r","role_id","r.parent")->get();
+        if(count($child_roles) > 0)
+         return true;
+        return false;
+    }
+
+    public function branche()
+    {
+        return $this->belongsToMany('App\branch', 'user_branches','user_id','branch_id');
+    }
+    public function getAdminBranchesIds()
+    {
+        $ids = array();
+        $br = $branches = \App\branch::all();
+        foreach($br as $branch)
+        {
+            $ids[] =  $branch->id;
+        }
+        return $ids;
+    }
+
+    public function getBranchesIds()
+    {
+        $ids = array();
+        foreach($this->branche as $branch)
+        {
+            $ids[] =  $branch->id;
+        }
+        return $ids;
+    }
+
+
 
     public function UserHasRole($role)
     {

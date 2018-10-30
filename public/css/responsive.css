@@ -1,0 +1,39 @@
+@media (max-width: 544px) {
+    .drop-action{
+        display: inline-grid;
+    }
+    .card{
+        height: auto !important;
+    }
+    .lab{
+        text-align: left !important;
+    }
+    section{
+        padding: 12px !important;
+    }
+    .small-sc-btn2{
+        margin: 10px 0;
+    }
+    .small-sc-btn{
+        margin: 10px 0;
+    }
+    .small-sc-btn3{
+        margin: 10px;
+    }
+   
+}
+
+@media (max-width: 768px) {
+    .card{
+        height: auto !important;
+    }
+}
+
+
+@media (max-width: 992px) {
+  
+}
+
+@media (max-width: 1200px) {}
+
+@media (max-width: 950px) {}

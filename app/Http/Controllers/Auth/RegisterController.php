@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use App\branch;
+use App\user_branches;
 class RegisterController extends Controller
 {
     /*
@@ -38,8 +40,23 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-      //  $this->middleware('guest');
+        $this->middleware('language');
+
     }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm(Request $request)
+    {
+        $action = $request->query("action")?$request->query("action"):"";
+        $role = $request->query("role")?$request->query("role"):"";
+        $branches = branch::all();
+        return view('auth.register',["action"=>$action,"role"=>$role,"branches"=>$branches]);
+    }
+
 
     /**
      * Get a validator for an incoming registration request.
@@ -53,6 +70,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'branch_name'=>'required'
         ]);
     }
 
@@ -67,7 +85,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make($data['password'])
         ]);
     }
 
@@ -76,7 +94,20 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
-        return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
+        $selected_branches = $request->branch_name;
+        foreach($selected_branches as $branch)
+        {
+            $user_branches = new user_branches();
+            $user_branches->user_id =  $user->id;
+            $user_branches->branch_id =  $branch;
+            $user_branches->save();
+        }
+
+        if($request->action == "new_user")
+          return redirect('roles/user/'. $request->role."/".app()->getLocale()."?branch=".$request->query('branch'));
+
+        return redirect('user/roles/'. $user->id."/".app()->getLocale()."?branch=".$request->query('branch'));
+      /*  return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());  */
     }
 }

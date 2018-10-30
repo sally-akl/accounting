@@ -28,6 +28,7 @@ class settingRequest extends FormRequest
             "address"=>"required|string",
             "email"=>"required|email",
             'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'sal_type'=>'string'
         ];
     }
 }

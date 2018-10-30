@@ -27,9 +27,10 @@ class InvoiceRequest extends FormRequest
             'customer_name'=>'required|integer',
             'invoice_status'=>'required|string',
             'invoices_date'=>'required|date',
-            'invoice_payment_term'=>'string',
+            'invoice_payment_term'=>'numeric',
             'invoices_discount'=>'integer',
-            'invoices_discount_type'=>'string'
+            'invoices_discount_type'=>'string',
+            'currency'=>'required'
            ];
     }
 }

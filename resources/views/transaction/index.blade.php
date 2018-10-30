@@ -1,260 +1,162 @@
 @extends('layouts.master')
 
 @section('content')
+  @if($trans_type == "all")
+<section id="add-form">
+										 <div class="container-fluid">
+												 <div class="row align-items-center justify-content-center">
+														 <div class="card col-lg-12 padding20">
+															 <div class="row">
+															 <div class="col-lg-6">
+																		 <label class=" form-control-label"><i class="fa fa-search" aria-hidden="true"></i> @lang('app.Search')</label>
+																	 </div>
+																	 </div>
+																	 <div class="row">
+																		 <div class="col-lg-12 mg-top25">
+																			   @include("transaction.search")
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-                                      @if($trans_type == "income")
-                                        @lang('app.list_of_income')
-																			@elseif($trans_type == "expense")
-                                        @lang('app.list_of_expense')
-																			@elseif($trans_type == "transfer")
-	                                        @lang('app.list_of_transfer')
+																					 </div>
+																				 </div>
 
-																			@elseif($trans_type == "all")
-			                                      @lang('app.all')
+														 </div>
+												 </div>
+										 </div>
+								 </section>
+								 	@endif
 
-																			@endif
-																		</h3>
-																	</div>
-																</div>
-															</div>
+							 <section id="add-table">
+								 <div class="container-fluid">
+									 <div class="row align-items-center justify-content-center">
+											 <div class="card col-lg-12 custyle">
+												 <div class="row">
+													 <div class="col-lg-12 mg-top25">
+														 <label class="form-control-label"> <i class="fas fa-cog"></i>
+															 @if($trans_type == "income")
+																 @lang('app.list_of_income')
+															 @elseif($trans_type == "expense")
+																 @lang('app.list_of_expense')
+															 @elseif($trans_type == "transfer")
+																	 @lang('app.list_of_transfer')
 
-                                @include("utility.sucess_message")
+															 @elseif($trans_type == "all")
+																		 @lang('app.all')
 
-                                                            <div class="row toolss">
-
-																															<div class="col-xl-6">
-                                                                  @if($trans_type == "all")
-                                                                        <button type="button" class="inputSearchYellow"><i class="fa fa-search"></i> Search</button>
-																																	@endif
-
-                                                                </div>
-
-
-                                                                <div class="col-xl-6">
-                                                                    <div class="btnAQ">
-                                                                        <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push toolsmenu" m-dropdown-toggle="hover" aria-expanded="true">
-                                                                      <!--  <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--outline-2x m-btn--air m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle" id="delett">
-                                                                            <i class="la la-plus m--hide"></i>
-                                                                            <i class="la la-ellipsis-h"></i>
-                                                                        </a>
-																																			-->
-                                                                        <div class="m-dropdown__wrapper ">
-                                                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                                                            <div class="m-dropdown__inner deleteAllItem">
-                                                                                <div class="m-dropdown__body deletebody">
-                                                                                    <div class="m-dropdown__content">
-                                                                                        <ul class="m-nav">
-                                                                                            <li class="m-nav__section m-nav__section--first m--hide">
-                                                                                                <span class="m-nav__section-text">
-                                                                                                    Quick Actions
-                                                                                                </span>
-                                                                                            </li>
-                                                                                            <li class="m-nav__item">
-                                                                                                <a href="" class="m-nav__link">
-                                                                                                    <span class="m-nav__link-text">
-                                                                                                        <i class="la la-trash"></i> Delete All
-                                                                                                    </span>
-                                                                                                </a>
-                                                                                            </li>
-
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if($trans_type != "all")
-																																		<a href='{{url("transactions/create/{$trans_type}")}}'>
-																																				<button type="button" class="btnNew"><i class="fa fa-plus"></i>
-																																					@if($trans_type == "income")
-																		                                        @lang('app.add_new_income')
-																																					@elseif($trans_type == "expense")
-																		                                        @lang('app.add_new_expense')
-																																					@elseif($trans_type == "transfer")
-																			                                        @lang('app.add_new_transaction')
-
-																																					@endif
+															 @endif
 
 
-																																				</button>
-																																		</a>
-                                                                    @endif
+														 </label>
+														   @if($trans_type != "all")
+														 <a href='{{url("transactions/create/{$trans_type}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}' style="display:inline">
+														     <button type="button" class="btn btn-primary"><i class="fas fa-plus" style="margin-right: 6px;"></i>
+																	 @if($trans_type == "income")
+																			  @lang('app.add_new_income')
+																	 @elseif($trans_type == "expense")
+																				 @lang('app.add_new_expense')
+															     @elseif($trans_type == "transfer")
+																				 @lang('app.add_new_transaction')
+
+																	 @endif
 
 
 
-                                                                </div>
-                                                                </div>
+																 </button>
+													   </a>
+														   @endif
+													 </div>
+												 </div>
+												 @include("utility.sucess_message")
+												 <table class="table table-striped custab">
 
+													 <thead>
+														 <tr>
+															 <th scope="col">
 
-																																<div class="row advancedSearch">
-																																		@if($trans_type == "all")
-																																      @include("transaction.search")
-																																  @endif
-																										         	</div>
+																																			 </th>
+																																			 <th scope="col">@lang('app.transfer_code')</th>
+																																			 <th scope="col">@lang('app.Date')</th>
+																																			 <th scope="col">@lang('app.Amount')</th>
+																																			 <th scope="col">@lang('app.Description')</th>
+                                                                       <th scope="col">
+                                                                         @lang('app.submit_user_name')
+                                                                      </th>
 
-
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
-
-                                                                        </th>
-																																				<th>@lang('app.transfer_code')</th>
-																																				<th>@lang('app.Date')</th>
-																																				<th>@lang('app.Amount')</th>
-																																				<th>@lang('app.Description')</th>
-
-
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($transfers as $key => $trans)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$trans->transfer_code_num}}
-																																						</td>
-
-																																						<td>
-																																								{{$trans->transfer_date}}
-																																						</td>
-
-																																						<td>
-																																							{{$trans->transfer_amount}}
-																																						</td>
-
-																																						<td>
-																																						{{$trans->transfer_desc}}
-																																						</td>
-
-
-																																						<td>
-
-																																						</td>
-																																							@if($trans_type != "all")
-																																						<td>
-																																							<a href="#" class="deleted_btn" data-title="{{$trans->id}}">	<i class="la la-trash"></i> </a>
-																																							<a href='{{url("category/{$trans->id}/show")}}'>	<i class="la la-eye" data-toggle="modal" data-target="#m_modal_6"></i></a>
+																																			 <th scope="col"></th>
 
 
 
-																																						</td>
-																																						@endif
+														 </tr>
+													 </thead>
+													 <tbody>
 
-																																				</tr>
+                                @foreach ($transfers as $key => $trans)
 
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$transfers->links('vendor.pagination.default')}}
+														 <tr>
+															 <th scope="row">
 
 
-														</div>
-														<!--end::Portlet-->
+																																					 </th>
+															 <td data-label="@lang('app.transfer_code')">	{{clean($trans->transfer_code_num)}}</td>
+															 <td data-label="@lang('app.Date')">{{$trans->transfer_date}}
+                               </td>
 
+															 <td data-label="@lang('app.Amount')">{{clean($trans->transfer_amount)}} {{Auth::user()->currency}}
+                               </td>
 
-														<script type="text/javascript">
-															 $(".deleted_btn").on("click",function(){
+															 <td data-label="@lang('app.Description')">	{{clean($trans->transfer_desc)}}
+                               </td>
+                               <td data-label="@lang('app.submit_user_name')">	{{$trans->users->name	}}
 
-																 var id = $(this).attr("data-title");
-																 var url_delete = '{{url("transactions/index")}}'+"/"+id
-																					$.ajax({url: url_delete , success: function(result){
-
-																						   result = JSON.parse(result);
-																						   console.log(result);
-																							 if(result.sucess)
-																							 {
-																								   window.location.href = '{{url("/transactions/{$trans_type}")}}';
-																							 }
-																						}});
-
-																 })
+                               </td>
 
 
 
-														</script>
+															 <td class="text-center">
+																 @if($trans_type != "all")
+															<!--	 <a class='btn btn-info btn-xs' href='{{url("category/{$trans->id}/show")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																	 <i class="far fa-edit"></i>
+																 </a>
+                               -->
+																 <a href="#" class="btn btn-danger btn-xs deleted_btn"  data-title="{{$trans->id}}">
+																	 <i class="far fa-trash-alt"></i>
+																 </a>
+																 	@endif
+															 </td>
+														 </tr>
+														   @endforeach
 
+
+
+													 </tbody>
+												 </table>
+
+													  {{$transfers->links('vendor.pagination.default')}}
+													 </div>
+									 </div>
+								 </div>
+							 </section>
 @endsection
 
+@section('footerjscontent')
 
-@section('subhead')
+<script type="text/javascript">
+               $(".deleted_btn").on("click",function(){
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@if($trans_type == "income")
-													@lang('app.list_of_income')
-												@elseif($trans_type == "expense")
-													@lang('app.list_of_expense')
-												@elseif($trans_type == "transfer")
-														@lang('app.list_of_transfer')
-												@elseif($trans_type == "all")
-														@lang('app.all')
-												@endif
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												@if($trans_type == "all")
-												<li class="m-nav__item">
-													<a href='{{url("/transactions/{$trans_type}")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@if($trans_type == "income")
-																@lang('app.income')
-															@elseif($trans_type == "expense")
-																@lang('app.expense')
-															@elseif($trans_type == "transfer")
-																	@lang('app.transfer')
-															@elseif($trans_type == "all")
-		 															@lang('app.transactions')
+                 var id = $(this).attr("data-title");
+                 var url_delete = '{{url("transactions/index")}}'+"/"+id+'/{{app()->getLocale()}}'
+                          $.ajax({url: url_delete , success: function(result){
 
-															@endif
-														</span>
-													</a>
-												</li>
+                               result = JSON.parse(result);
+                               console.log(result);
+                               if(result.sucess)
+                               {
+                                   window.location.href = '{{url("/transactions/{$trans_type}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}';
+                               }
+                            }});
 
-												<li class="m-nav__separator">
-													-
-												</li>
-                        @endif
-											</ul>
-										</div>
-										<div>
+                 })
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+
+
+            </script>
 
 @endsection

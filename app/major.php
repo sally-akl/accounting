@@ -21,4 +21,10 @@ class major extends Model
     {
          return $this->hasMany('App\emplyee_major');
     }
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
+
+
 }

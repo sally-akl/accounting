@@ -16,7 +16,7 @@ class accountController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
          $accounts =  Common::CommonList('account',$this->pagination_num ) ;
@@ -51,8 +51,8 @@ class accountController extends Controller
           $account->save();
           $where_from =  $request->where_from;
           if($where_from != "0")
-             return redirect('/transactions/create/'.$where_from);
-          return redirect('/account')->with("message",trans('app.add_sucessfully'));
+             return redirect('/transactions/create/'.$where_from."/".app()->getLocale());
+          return redirect('/account'."/".app()->getLocale())->with("message",trans('app.add_sucessfully'));
     }
 
     /**
@@ -95,7 +95,7 @@ class accountController extends Controller
           $account->branch_city = $request->city;
           $account->open_balance = $request->balance;
           $account->save();
-          return redirect('/account')->with("message",trans('app.update_sucessfully'));
+          return redirect('/account'."/".app()->getLocale())->with("message",trans('app.update_sucessfully'));
     }
 
     /**

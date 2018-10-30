@@ -1,191 +1,138 @@
 @extends('layouts.master')
 
 @section('content')
-
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-                                      @if($trans_type == "bydate")
-                                        @lang('app.income_expense_by_date')
+<section id="add-form">
+                        <div class="container-fluid">
+                            <div class="row align-items-center justify-content-center">
+                                <div class="card col-lg-12 padding20">
+                                  <div class="row">
+                                  <div class="col-lg-8 mg-top25">
+                                        <label class=" form-control-label">  @if($trans_type == "bydate")
+                                        @lang('app.income_expense_by_date2')
 																			@elseif($trans_type == "byrange")
                                         @lang('app.income_expense_by_range')
 
-																			@endif
-																		</h3>
-																	</div>
-																</div>
-															</div>
-
-                                @include("utility.sucess_message")
-
-
-																<div class="row">
-																	<div class="col-xl-3" style="margin-left: 81px;">
-
-																		<div class="row  incomesStat   statDashboard2 mx-auto" style="width: 290px;margin-top: 11px;">
-																				<div class="col-xl-2 iconStat">
-
-																				</div>
-																				<div class="col-xl-10">
-																						<h2>{{$total_income}}</h2>
-																						<p>@lang('app.total_income')</p>
-																				</div>
-																		</div>
-
-																	 </div>
+																			@endif</label>
+                                      </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-lg-12 mg-top30">
+																					<form method="get" action="{{ url('reports/search') }}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}" >
+                                                       @csrf
 
 
-																	 <div class="col-xl-3" style="margin-left: 81px;">
+                                                <div class="form-group row">
+                                                        <label class="col-sm-3 form-control-label label-sm">{{ __('app.date_from') }}</label>
+                                                        <div class="col-sm-9">
+                                                          <input id="inputHorizontalSuccess" placeholder="{{ __('app.enter_date_from') }}" name= "transfer_from" class="form-control form-control-success" type="date">
+                                                        </div>
+                                                      </div>
 
-																		 <div class="row expnesesStat   statDashboard2 mx-auto" style="width: 290px;margin-top: 11px;">
-																				 <div class="col-xl-2 iconStat">
+																											@if($trans_type == "byrange")
 
-																				 </div>
-																				 <div class="col-xl-10">
-																						 <h2>{{$total_expense}}</h2>
-																						 <p>@lang('app.total_expense')</p>
-																				 </div>
-																		 </div>
+																											<div class="form-group row">
+																															<label class="col-sm-3 form-control-label label-sm">{{ __('app.date_to') }}</label>
+																															<div class="col-sm-9">
+																																<input id="inputHorizontalSuccess" placeholder="{{ __('app.enter_date_to') }}" name= "transfer_to" class="form-control form-control-success" type="date">
+																															</div>
+																														</div>
 
-																		</div>
+																											@endif
 
+                                                        <input type="hidden" name="transfer_type" value="{{$trans_type}}" />
 
-																</div>
+                                              <div class="form-group row">
+                                                  <label class="col-sm-3 form-control-label label-sm">@lang('app.total_income')</label>
+                                                  <div class="col-sm-9">
+                                                    {{$total_income}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}
+                                                  </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                        <label class="col-sm-3 form-control-label label-sm">@lang('app.total_expense')</label>
+                                                        <div class="col-sm-9">
+                                                        {{$total_expense}}  {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}
+                                                        </div>
+                                                      </div>
+                                                <button type="submit" class="btn btn-primary">@lang('app.Filter') </button>
 
-                                                            <div class="row toolss">
+                                              </form>
 
-																															<div class="col-xl-6">
+                                              </div>
+                                            </div>
 
-                                                                        <button type="button" class="inputSearchYellow"><i class="fa fa-search"></i> Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
+                  <section id="add-table">
+                    <div class="container-fluid">
+                      <div class="row align-items-center justify-content-center">
+                          <div class="card col-lg-12 custyle">
+                            <div class="row">
+                              <div class="col-lg-12 mg-top25">
+                               <button class="btn btn-primary2 hidden-print small-sc-btn "><i class="far fa-file-pdf"></i> PDF </button>
+                               <button class="btn btn-primary hidden-print small-sc-btn3 print"><i class="fas fa-print"></i>@lang('app.print')  </button>
+                               </div>
+                            </div>
+                            <table class="table table-striped custab" id="print_tb">
 
-                                                                </div>
+                              <thead>
+                                <tr>
+																	<th>@lang('app.transfer_code')</th>
+																																			<th>@lang('app.transfer_type')</th>
+																																			<th>@lang('app.Date')</th>
 
+																																			<th>@lang('app.Description')</th>
+                                                                      <th scope="col">
+                                                                        @lang('app.submit_user_name')
+                                                                     </th>
+                                                                      <th>@lang('app.Amount')</th>
+                                                                        <th scope="col">@lang('app.amount_after_trans')</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                 @php $total_amount = 0 ;  @endphp
+																  @foreach ($transfers as $key => $trans)
+                                <tr>
+                                  <td data-label="@lang('app.transfer_code')">	{{clean($trans->transfer_code_num)}}</td>
+                                  <td data-label="@lang('app.transfer_type')">	{{clean($trans->transfer_type)}}</td>
+                                  <td data-label="@lang('app.Date')">	{{$trans->transfer_date}}</td>
 
-                                                                <div class="col-xl-6">
-                                                                    <div class="btnAQ">
-                                                                        <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push toolsmenu" m-dropdown-toggle="hover" aria-expanded="true">
-                                                                      <!--  <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--outline-2x m-btn--air m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle" id="delett">
-                                                                            <i class="la la-plus m--hide"></i>
-                                                                            <i class="la la-ellipsis-h"></i>
-                                                                        </a>
-																																			-->
-                                                                        <div class="m-dropdown__wrapper ">
-                                                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                                                            <div class="m-dropdown__inner deleteAllItem">
-                                                                                <div class="m-dropdown__body deletebody">
-                                                                                    <div class="m-dropdown__content">
-                                                                                        <ul class="m-nav">
-                                                                                            <li class="m-nav__section m-nav__section--first m--hide">
-                                                                                                <span class="m-nav__section-text">
-                                                                                                    Quick Actions
-                                                                                                </span>
-                                                                                            </li>
-                                                                                            <li class="m-nav__item">
-                                                                                                <a href="" class="m-nav__link">
-                                                                                                    <span class="m-nav__link-text">
-                                                                                                        <i class="la la-trash"></i> Delete All
-                                                                                                    </span>
-                                                                                                </a>
-                                                                                            </li>
+																	<td data-label="@lang('app.Description')">{{clean($trans->transfer_desc)}}</td>
+                                  <td data-label="@lang('app.submit_user_name')">	{{$trans->users != null ?$trans->users->name:""	}}
 
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                  </td>
+                                  	<td data-label="@lang('app.Amount')">	{{clean($trans->transfer_amount)}}  {{\App\classes\Common::getCurrencyText($trans->currancy)}}</td>
+                                    <td data-label="@lang('app.amount_after_trans')">	{{clean($trans->converted_transfer_amount)}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</td>
 
-
-
-
-
-                                                                </div>
-                                                                </div>
-
-
-																																<div class="row advancedSearch">
-
-																																      @include("reports.search")
-
-																										         	</div>
-
-
-                                                            </div>
-
-
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
-
-                                                                        </th>
-																																				<th>@lang('app.transfer_code')</th>
-																																				<th>@lang('app.transfer_type')</th>
-																																				<th>@lang('app.Date')</th>
-																																				<th>@lang('app.Amount')</th>
-																																				<th>@lang('app.Description')</th>
+                                </tr>
+                                  @php $total_amount += $trans->converted_transfer_amount ;  @endphp
+																  @endforeach
 
 
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
+                              </tbody>
+                            </table>
 
-                                                                        @foreach ($transfers as $key => $trans)
+                            {{$transfers->links('vendor.pagination.default')}}
+                              </div>
+                      </div>
+                    </div>
+                  </section>
 
-																																				<tr>
-																																						<th scope="row">
+                  <section id="chart2">
 
+                      <div class="col-lg-12">
+                        <div class="line-chart-month card">
+                           <div class="card-body">
+                             <div style="height: 337px;">
+                                 <div id="incomeExpenseChart" style="width: 100%;height: 100%; background-color: #FFFFFF;" ></div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
 
-																																						</th>
-
-																																						<td>
-																																								{{$trans->transfer_code_num}}
-																																						</td>
-																																						<td>
-																																								{{$trans->transfer_type}}
-																																						</td>
-
-																																						<td>
-																																								{{$trans->transfer_date}}
-																																						</td>
-
-																																						<td>
-																																							{{$trans->transfer_amount}}
-																																						</td>
-
-																																						<td>
-																																						{{$trans->transfer_desc}}
-																																						</td>
-
-
-																																						<td>
-
-																																						</td>
-
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$transfers->links('vendor.pagination.default')}}
-
-
-														</div>
-														<!--end::Portlet-->
+                  </section>
 
 
 
@@ -193,36 +140,74 @@
 @endsection
 
 
-@section('subhead')
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@if($trans_type == "bydate")
-													@lang('app.income_expense_by_date')
-												@elseif($trans_type == "byrange")
-													@lang('app.income_expense_by_range')
-												@endif
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
+@section('footerjscontent')
 
-											</ul>
-										</div>
-										<div>
+<script type="text/javascript">
+  $(".print").on("click",function()
+  {
+      printJS('print_tb', 'html')
+  });
+</script>
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+   <script type="text/javascript">
+			AmCharts.makeChart("incomeExpenseChart",
+				{
+					"type": "serial",
+					"categoryField": "category",
+					"startDuration": 1,
+					"categoryAxis": {
+						"gridPosition": "start"
+					},
+					"trendLines": [],
+					"graphs": [
+						{
+							"balloonText": "[[title]] of [[category]]:[[value]]",
+							"fillAlphas": 1,
+							"fillColors": "#34BFA3",
+							"id": "AmGraph-1",
+							"lineColor": "#34BFA3",
+							"title": "Income",
+							"type": "column",
+							"valueField": "Income"
+						},
+						{
+							"balloonText": "[[title]] of [[category]]:[[value]]",
+							"fillAlphas": 1,
+							"fillColors": "#F4516C",
+							"id": "AmGraph-2",
+							"lineColor": "#F4516C",
+							"title": "Expense",
+							"type": "column",
+							"valueField": "Expense"
+						}
+					],
+					"guides": [],
+					"valueAxes": [
+						{
+							"id": "ValueAxis-1",
+							"title": ""
+						}
+					],
+					"allLabels": [],
+					"balloon": {},
+					"legend": {
+						"enabled": true,
+						"useGraphSettings": true
+					},
+					"titles": [
+						{
+							"id": "Title-1",
+							"size": 15,
+							"text": ""
+						}
+					],
+					"dataProvider": {!! $expense_income_chart !!},
+					"export": {
+						"enabled": true
+					}
+				}
+			);
+		</script>
 
 @endsection

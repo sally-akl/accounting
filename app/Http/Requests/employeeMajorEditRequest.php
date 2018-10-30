@@ -25,7 +25,8 @@ class employeeMajorEditRequest extends FormRequest
     {
         return [
           'is_current'=>'string',
-          'salary'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/'
+          'salary'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          'branch_name'=>'required'
         ];
     }
 }

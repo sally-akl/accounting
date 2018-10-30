@@ -1,142 +1,100 @@
 @extends('layouts.master')
 
 @section('content')
+<section id="manage-incom">
+									 <div class="container-fluid">
+											 <div class="row">
+													 <div class="col-lg-12">
+															 <div class="card">
+																	 <div class="card col-lg-12 padding20">
+																			 <div class="row">
+																					 <div class=" mg-top25">
+																							 <label class=" form-control-label"> <i class="far fa-edit"></i> @lang('app.update_customer')</label>
+																					 </div>
+																			 </div>
+																			 <div class="row">
+																					 <div class="col-lg-12 mg-top30">
+																						   @include("utility.error_messages")
+																							 <form method="POST" action='{{url("customer/{$customer->id}")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																                   @csrf
 
-<!--begin::Portlet-->
-														<div class="m-portlet contentAdd">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																		 @lang('app.update_customer')
-																		</h3>
-																	</div>
-																</div>
-															</div>
+																									<div class="form-group row">
+																													<label class="col-sm-3 form-control-label label-sm">   @lang('app.customer_name') </label>
+																													<div class="col-sm-9">
+																															<input id="inputHorizontalSuccess" name= "fullname"  placeholder="{{ __('app.enter_full_name') }}" class="form-control form-control-success" type="text" value="{{$customer->full_name}}">
+																													</div>
+																											</div>
 
+																											<div class="form-group row">
+																															<label class="col-sm-3 form-control-label label-sm">   @lang('app.customer_email') </label>
+																															<div class="col-sm-9">
+																																	<input id="inputHorizontalSuccess" name= "email"  placeholder="{{ __('app.enter_customer_email') }}" class="form-control form-control-success" type="text" value="{{$customer->email}}">
+																															</div>
+																													</div>
 
-                            @include("utility.error_messages")
+																													<div class="form-group row">
+																																	<label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_address') </label>
+																																	<div class="col-sm-9">
+																																			<input id="inputHorizontalSuccess" name= "address"  placeholder="{{ __('app.enter_customer_address') }}" class="form-control form-control-success" type="text" value="{{$customer->address}}">
+																																	</div>
+																															</div>
 
+																															<div class="form-group row">
+																																			<label class="col-sm-3 form-control-label label-sm">   @lang('app.employee_phone') </label>
+																																			<div class="col-sm-9">
+																																					<input id="inputHorizontalSuccess" name= "phone"  placeholder="{{ __('app.enter_customer_phone') }}" class="form-control form-control-success" type="text" value="{{$customer->phone}}">
+																																			</div>
+																																	</div>
 
-                              <form method="POST" action='{{url("customer/{$customer->id}")}}'>
-                                  @csrf
-                                                            <div class="row addConntent">
-                                                                <div class="col-xl-12">
-																																	<div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.customer_name')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "fullname" class="form-control m-input" placeholder="{{ __('app.enter_full_name') }}" value="{{$customer->full_name}}">
-
-                                                                  </div>
-
-  																																<div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.customer_email')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "email" class="form-control m-input" placeholder="{{ __('app.enter_customer_email') }}" value="{{$customer->email}}">
-
-                                                                  </div>
-
-  																																<div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.employee_address')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "address" class="form-control m-input" placeholder="{{ __('app.enter_customer_address') }}" value="{{$customer->address}}">
-
-                                                                  </div>
-
-  																																<div class="form-group m-form__group">
-                                                                      <label for="exampleInputEmail1">
-                                                                        @lang('app.employee_phone')  :
-                                                                      </label>
-                                                                      <input type="text"  name= "phone" class="form-control m-input" placeholder="{{ __('app.enter_customer_phone') }}" value="{{$customer->phone}}">
-
-                                                                  </div>
-
-
-  																																<div class="form-group m-form__group">
-  																																		<label for="exampleInputEmail1">
-  																																			@lang('app.customer_city')  :
-  																																		</label>
-
-  																																		<select class="form-control m-input" name="city_val" >
-
-  																																					@foreach ($citites as $key => $city)
+																									 <div class="form-group row">
+																										<label class="col-sm-3 form-control-label label-sm">	@lang('app.customer_city')</label>
+																										<div class="col-sm-9">
+																												<select name="city_val" class="form-control">
+																													@foreach ($citites as $key => $city)
   																																						<option value="{{$city->id}}" {{$city->id == $customer->city_id ?"selected":""}}>{{$city->title}}</option>
   																																					@endforeach
-  																																		</select>
 
-  																																</div>
+																												</select>
 
-                                                                <div class="row btnAddn">
-                                                                    <div class="col-xl-12">
-                                                                        <input type="submit" class="btn btn-success m-btn m-btn--pill" data-toggle="modal" data-target="#m_markdown_modal" value="{{ __('app.update_customer') }}">
+																										</div>
+																								</div>
 
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            </div>
+																								@if(is_int($branches))
+																									<input type="hidden" name="branch_name" value="{{$customer->branch_id}}" />
 
-                                                          </form>
+																									 @else
 
-
-
-														</div>
-														<!--end::Portlet-->
+																									 <div class="form-group row">
+																														<label class="col-sm-3 form-control-label label-sm">@lang('app.branch_name')</label>
+																														<div class="col-sm-9">
+																												<select name="branch_name" class="form-control">
 
 
-@endsection
+																																		 @foreach ($branches as $key => $branch)
+																																			 <option value="{{$branch->id}}" {{$customer->branch_id == $branch->id ?"selected":""}}>{{$branch->branch_title}}</option>
+																																		 @endforeach
+
+																													</select>
+																													</div>
+																											</div>
+
+																									 @endif
 
 
 
-@section('subhead')
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_customer')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/customer")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.customer')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("customer/{$customer->id}/edit")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.update_customer')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
 
-											</ul>
-										</div>
-										<div>
+																									 <button type="submit" class="btn btn-primary">{{ __('app.update_customer') }} </button>
+																							 </form>
+																					 </div>
+																			 </div>
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+																	 </div>
+															 </div>
+													 </div>
+											 </div>
+									 </div>
+							 </section>
 
 @endsection

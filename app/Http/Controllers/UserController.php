@@ -8,10 +8,11 @@ use App\role;
 use App\userrole;
 use App\Http\Requests\UserRequest;
 use Session;
+use App\branch;
 class UserController extends Controller
 {
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
          $user = User::where('id','!=',1)->orderBy("id","desc")->paginate($this->pagination_num);
@@ -25,7 +26,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('user.update',compact('user'));
+        $branches = branch::all();
+        return view('user.update',compact('user','branches'));
     }
     public function update(UserRequest $request, $id)
     {
@@ -33,7 +35,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->save();
-        return redirect('/user')->with("message",trans('app.update_sucessfully'));
+        return redirect('/user'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
     public function destroy($id)
     {
@@ -67,14 +69,19 @@ class UserController extends Controller
            {
               $this->InsertUserRole($user,$request->role_name);
            }
-           return redirect('/roles')->with("message",trans('app.add_sucessfully'));
+           return redirect('/roles'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
 
        }
        else {
-            if($this->InsertUserRole($request->user_val,$request->role_name))
-               return redirect('/user')->with("message",trans('app.add_sucessfully'));
 
-            return redirect('/user')->with("message",trans('app.error_exist'));
+            $user_in_roles = userrole::where("user_id",$request->user_val)->get();
+            if(count($user_in_roles) == 0)
+            {
+              if($this->InsertUserRole($request->user_val,$request->role_name))
+                 return redirect('/user'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
+            }
+
+            return redirect('/user'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.error_exist'));
        }
 
     }

@@ -17,4 +17,8 @@ class expense_type extends Model
     {
        return $this->hasMany('App\transaction');
     }
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
 }

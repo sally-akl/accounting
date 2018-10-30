@@ -1,190 +1,136 @@
 @extends('layouts.master')
 
 @section('content')
+<section id="statistcs-invoice">
+				 <div class="container-fluid">
+					 <div class="row cart-top has-shadow">
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-																			@if($trans_type == "income")
+
+						 <div class="col-lg-4">
+							 <div class="row red3">
+								 <div class="col-2 col-lg-2">
+									 <i style="color: #dedede66;font-size: 70px;line-height: 1.3;" class="fas fa-long-arrow-alt-up"></i>
+								 </div>
+								 <div class="col-10 col-lg-10">
+									 <h1>{{$total}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</h1>
+									 <br>
+									 <p>@lang('app.Total')</p>
+								 </div>
+
+
+							 </div>
+						 </div>
+						 <div class="col-lg-4">
+							 <div class="row green3">
+								 <div class="col-2 col-lg-2">
+									 <i style="color: #dedede66;font-size: 70px;line-height: 1.3;" class="fas fa-long-arrow-alt-up"></i>
+								 </div>
+								 <div class="col-10 col-lg-10">
+									 <h1>{{$total_week}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</h1>
+									 <br>
+									 <p>@lang('app.Total_this_week')</p>
+								 </div>
+
+
+							 </div>
+						 </div>
+						 <div class="col-lg-4">
+							 <div class="row blue3">
+								 <div class="col-2 col-lg-2">
+									 <i style="color: #dedede66;font-size: 70px;line-height: 1.3;" class="fas fa-long-arrow-alt-up"></i>
+								 </div>
+								 <div class="col-10 col-lg-10">
+									 <h1>{{$total_month}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</h1>
+									 <br>
+									 <p>@lang('app.Total_this_month')</p>
+								 </div>
+
+
+							 </div>
+						 </div>
+
+					 </div>
+				 </div>
+			 </section>
+
+			 <section id="add-table">
+				 <div class="container-fluid">
+					 <div class="row align-items-center justify-content-center">
+						 <div class="card col-lg-12 custyle">
+							 <div class="row">
+								 <div class="col-lg-12 mg-top25">
+									 <label class="form-control-label">
+										                 @if($trans_type == "income")
 																				@lang('app.list_of_income')
 																			@elseif($trans_type == "expense")
 																				@lang('app.list_of_expense')
                                        @endif
+																		 </label>
+								 </div>
+							 </div>
+							 <table class="table table-striped custab">
+								 <thead>
+									 <tr>
+										 <th>@lang('app.transfer_code')</th>
+										 <th>@lang('app.Date')</th>
 
-																		</h3>
-																	</div>
-																</div>
-															</div>
+										 <th>@lang('app.Description')</th>
+										 <th scope="col">
+											 @lang('app.submit_user_name')
+										</th>
+										 <th>@lang('app.Amount')</th>
+                      <th scope="col">@lang('app.amount_after_trans')</th>
+									 </tr>
+								 </thead>
+								 <tbody>
+									    @php $total_amount = 0 ;  @endphp
+									   @foreach ($transfers as $key => $trans)
+									 <tr>
+										 <td data-label="@lang('app.transfer_code')">	{{clean($trans->transfer_code_num)}}</td>
+										 <td data-label="@lang('app.Date')">	{{$trans->transfer_date}}</td>
 
-                                @include("utility.sucess_message")
+										  <td data-label="@lang('app.Description')">{{clean($trans->transfer_desc)}}</td>
+											<td data-label="@lang('app.submit_user_name')">	{{$trans->users != null ?$trans->users->name:""	}}
 
-                                                            <div class="row toolss">
+											</td>
+											<td data-label="@lang('app.Amount')">	{{clean($trans->transfer_amount)}} {{\App\classes\Common::getCurrencyText($trans->currancy)}}</td>
+                      <td data-label="@lang('app.amount_after_trans')">	{{clean($trans->converted_transfer_amount)}} {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}}</td>
+									 </tr>
+									   @php $total_amount += $trans->converted_transfer_amount ;  @endphp
+									   @endforeach
 
-																															<div class="col-xl-6">
+										 <tr>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+                        <td></td>
+												<td>@lang('app.Total') : {{\App\classes\Common::getCurrencyText(Auth::user()->currency)}} {{$total_amount}} </td>
+										 </tr>
 
+								 </tbody>
+							 </table>
 
-                                                              </div>
+							 {{$transfers->links('vendor.pagination.default')}}
+						 </div>
+					 </div>
+				 </div>
+			 </section>
+			 <section id="chart2">
 
-																																<div class="row advancedSearch">
+					 <div class="col-lg-12">
+						 <div class="line-chart-month card">
+                <div class="card-body">
+									<div style="height: 337px;">
+							        <div id="incomeExpenseChart" style="width: 100%;height: 100%; background-color: #FFFFFF;" ></div>
+									 </div>
+					     </div>
+						 </div>
+					 </div>
 
-																										         	  </div>
-
-                                                             <div class="row">
-																																<div class="col-xl-3" style="margin-left: 81px;">
-
-																																	<div class="row {{$trans_type=='expense'?'expnesesStat':'incomesStat'}}   statDashboard2 mx-auto">
-													                                            <div class="col-xl-2 iconStat">
-
-													                                            </div>
-													                                            <div class="col-xl-10">
-													                                                <h2>{{$total}}</h2>
-													                                                <p>Total</p>
-													                                            </div>
-													                                        </div>
-
-                                                                </div>
-
-																																<div class="col-xl-3">
-																																	<div class="row {{$trans_type=='expense'?'expnesesStat':'incomesStat'}}   statDashboard2 mx-auto">
-																																			<div class="col-xl-2 iconStat">
-
-																																			</div>
-																																			<div class="col-xl-10">
-																																					<h2>{{$total_week}}</h2>
-																																					<p>Total  this week</p>
-																																			</div>
-																																	</div>
-
-
-                                                                </div>
-
-																																<div class="col-xl-3">
-																																	<div class="row {{$trans_type=='expense'?'expnesesStat':'incomesStat'}}   statDashboard2 mx-auto">
-																																			<div class="col-xl-2 iconStat">
-
-																																			</div>
-																																			<div class="col-xl-10">
-																																					<h2>{{$total_month}}</h2>
-																																					<p>Total  this month</p>
-																																			</div>
-																																	</div>
-
-                                                                </div>
-                                                              </div>
-
-
-
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
-
-                                                                        </th>
-																																				<th>@lang('app.transfer_code')</th>
-																																				<th>@lang('app.Date')</th>
-																																				<th>@lang('app.Amount')</th>
-																																				<th>@lang('app.Description')</th>
-
-
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($transfers as $key => $trans)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$trans->transfer_code_num}}
-																																						</td>
-
-																																						<td>
-																																								{{$trans->transfer_date}}
-																																						</td>
-
-																																						<td>
-																																							{{$trans->transfer_amount}}
-																																						</td>
-
-																																						<td>
-																																						{{$trans->transfer_desc}}
-																																						</td>
-
-
-																																						<td>
-
-																																						</td>
-
-																																				</tr>
-
-
-
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$transfers->links('vendor.pagination.default')}}
-
-
-                                                      <div style="height: 337px;">
-																												<div id="incomeExpenseChart" style="width: 100%;height: 100%; background-color: #FFFFFF;" ></div>
-																											</div>
-
-
-														</div>
-														<!--end::Portlet-->
-
-
+			 </section>
 @endsection
 
-
-@section('subhead')
-
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@if($trans_type == "income")
-													@lang('app.list_of_income')
-												@elseif($trans_type == "expense")
-													@lang('app.list_of_expense')
-												 @endif
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-
-											</ul>
-										</div>
-										<div>
-
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
-
-@endsection
 
 
 @section('footerjscontent')

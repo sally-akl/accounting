@@ -1,40 +1,30 @@
+<!-- JavaScript files-->
+<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('vendor/popper.js/umd/popper.min.js') }}"> </script>
+<script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('vendor/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<script src="{{ asset('js/ckeditor.js') }}"></script>
+<!-- Main File-->
+<script src="{{ asset('js/front.js') }}"></script>
+<script src="{{ asset('js/underscore-min.js') }}"></script>
+<script src="{{ asset('js/assign_var_before_submit.js') }}"></script>
 
+<script type="text/javascript" src="{{ asset('js/flashcanvas.js') }}"></script>
+<script src="{{ asset('js/jSignature.min.js') }}"></script>
 
+<script type="text/javascript">
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+</script>
 
-		<!-- begin::Scroll Top -->
-		<div id="m_scroll_top" class="m-scroll-top">
-			<i class="la la-arrow-up"></i>
-		</div>
+  @yield('footerjscontent')
+  @yield('footerjsplugin')
+</body>
 
-		<!-- end::Scroll Top -->
-
-
-		<!--begin::Base Scripts -->
-
-        <script src="{{ asset('js/custom.js') }}"></script>
-		<script src="{{ asset('js/vendors.bundle.js') }}" type="text/javascript"></script>
-		<script src="{{ asset('js/scripts.bootstrap-4.js') }}" type="text/javascript"></script>
-
-		<!-- include summernote css/js -->
-	
-										<!--end::Base Scripts -->
-                                        <!--begin::Page Resources -->
-			<script src="{{ asset('js/libraries/custom/components/base/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-
-		<!--end::Base Scripts -->
-
-        <!--begin::Page Resources -->
-		<script src="{{ asset('js/libraries/custom/components/charts/morris-charts.js') }}" type="text/javascript"></script>
-
-		<!--end::Page Resources -->
-
-		<!--begin::Page Snippets -->
-		<script src="{{ asset('js/libraries/js/dashboard.js') }}" type="text/javascript"></script>
-
-    @yield('footerjscontent')
-
-
-	</body>
-
-	<!-- end::Body -->
 </html>

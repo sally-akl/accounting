@@ -26,7 +26,8 @@ class DiscountRequest extends FormRequest
         return [
           'bdate'=>'date',
           'emp_m_id'=>'required|integer',
-          'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
+          'sal_min_extra'=>'required|integer',
+        //  'amount'=>'required|regex:/^[0-9]+(\.[0-9][0-9]?)?$/',
         ];
     }
 }

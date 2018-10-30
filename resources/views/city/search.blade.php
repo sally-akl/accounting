@@ -1,11 +1,13 @@
-<form method="get" action="{{ url('city/search') }}" class="form-inline">
+<form method="get" action="{{ url('city/search/all') }}/{{app()->getLocale()}}">
     @csrf
-<div class="col-xs-3">
-    <input type="text" name="title" class="form-control m-input inputt" placeholder="{{ __('app.enter_city_name') }}">
-</div>
+    <div class="form-group row">
+        <label class="col-sm-2 form-control-label label-sm"> @lang('app.city_name')</label>
+        <div class="col-sm-10">
+          <input id="inputHorizontalSuccess" name="title" placeholder="{{ __('app.enter_city_name') }}" class="form-control form-control-success" type="text">
+        </div>
+      </div>
+      <input type="hidden" name="country" value='{{$c}}'  />
 
-<div class="col-xs-6">
-
-    <button type="submit" class="btnSearchIcon"><i class="fa fa-search"></i></button>
-</div>
+      <input type="hidden" name="branch" value='{{ Request::query("branch") }}'  />
+      <button type="submit" class="btn btn-primary">@lang('app.Search') </button>
 </form>

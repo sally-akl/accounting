@@ -14,11 +14,12 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    protected $pagination_num = 10;
-    public function index()
+    protected $pagination_num = 5;
+    public function index($c)
     {
-        $cities = city::orderBy("id","desc")->paginate($this->pagination_num);
-        return view('city.index',compact('cities'));
+        $cities = city::where("country_id",$c)->orderBy("id","desc")->paginate($this->pagination_num);
+        $countries = country::all();
+        return view('city.index',array("cities"=>$cities,"countries"=>$countries,"c"=>$c));
     }
 
     /**
@@ -26,10 +27,14 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($c,Request $request)
     {
-        $countries = country::all();
-        return view('city.add',compact('countries'));
+        $lay = 'city.add';
+        if($request->ajax())
+          $lay = 'ajax.add_city';
+
+        $countries_all = country::all();
+        return view($lay,array("c"=>$c,"countries_all"=>$countries_all));
     }
 
     /**
@@ -44,7 +49,20 @@ class CityController extends Controller
          $city->title = $request->title;
          $city->country_id = $request->country_value;
          $city->save();
-         return redirect('/city')->with("message",trans('app.add_sucessfully'));
+
+         if($request->ajax())
+         {
+             echo json_encode(array("sucess"=>true));
+             exit();
+         }
+
+         $is_redirect = $request->redirect_to_country;
+         if($is_redirect == 1)
+            return redirect('/country'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
+         if($is_redirect == 2)
+               return redirect('/branch'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
+
+         return redirect('/city'."/".$request->country_value."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
     }
 
     /**
@@ -65,11 +83,11 @@ class CityController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,$c)
     {
         $city = city::find($id);
         $countries = country::all();
-        return view('city.update',compact('city','countries'));
+        return view('city.update',array("city"=>$city,"countries"=>$countries,"c"=>$c));
     }
 
     /**
@@ -85,7 +103,7 @@ class CityController extends Controller
         $city->title = $request->title;
         $city->country_id = $request->country_value;
         $city->save();
-        return redirect('/city')->with("message",trans('app.update_sucessfully'));
+        return redirect("/city"."/".$request->country_value."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
     /**
@@ -103,9 +121,26 @@ class CityController extends Controller
     }
     public function search(Request $request)
     {
-         $search_title =  $request->title;
-         $cities = city::where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
-         return view('city.index',compact('cities'));
+         $search_title =  clean($request->title);
+         $c = clean($request->country);
+         $cities = city::where("country_id",$request->country)->where('title', 'like', '%' . $search_title . '%')->orderBy("id","desc")->paginate($this->pagination_num);
+         $countries = country::all();
+         return view('city.index',array("cities"=>$cities,"countries"=>$countries,"c"=>$c));
 
     }
+    public function get_city_by_country($id)
+    {
+        $country = country::find($id);
+        $cities = $country->city;
+        $html = "";
+        foreach($cities as $city)
+        {
+            $html .="<option value='".$city->id."'>".$city->title."</option>";
+        }
+        return json_encode(array("cities"=>$html));
+
+    }
+
+
+
 }

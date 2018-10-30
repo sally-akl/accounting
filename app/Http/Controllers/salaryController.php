@@ -19,12 +19,34 @@ class salaryController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-      protected $pagination_num = 10;
-      public function index()
+      protected $pagination_num = 5;
+      protected $employees;
+      protected $majors;
+      public function __construct()
       {
-          $employees = employee::all();
-          $employee_major = Common::CommonList('emplyee_major',$this->pagination_num ) ;
-          return view('salaries.index',compact('employee_major','employees'));
+        $this->middleware(function ($request, $next) {
+
+              $query2 = employee::whereRaw('1 = 1');
+              $query2 = Common::user_filter_by_role($query2,false,array(),"");
+              $this->categories = $query2->get();
+              $this->employees = $query2->get();
+
+              $query2 = major::select("major.*")->whereRaw('1 = 1');
+              $query2 = Common::user_filter_by_role($query2,true,array("categories as c","c.id","category_id"),"major");
+              $this->majors = $query2->get();
+              return $next($request);
+         });
+
+
+      }
+      public function index($emp_id)
+      {
+          $query = "";
+          $query = emplyee_major::whereRaw('1 = 1')->where("emplyee_id",$emp_id);
+          $query = Common::user_filter_by_role($query,false,array(),"");
+          $employee_major = $query->orderBy("id","desc")->paginate($this->pagination_num) ;
+          $where_from = 0;
+          return view('salaries.index',array("branches"=>Auth::user()->active_branch,"employee_major"=>$employee_major , "majors"=>$this->majors , "employees"=>$this->employees,"emp_id"=>$emp_id,"where_from"=>$where_from));
       }
 
       /**
@@ -32,11 +54,12 @@ class salaryController extends Controller
        *
        * @return \Illuminate\Http\Response
        */
-      public function create($where_from)
+      public function create($where_from,$emp_id,Request $request)
       {
-          $employees = employee::all();
-          $majors = major::all();
-          return view('salaries.add',compact('employees','majors','where_from'));
+          $lay = 'salaries.add';
+          if($request->ajax())
+             $lay = 'ajax.add_salary';
+          return view($lay,array("branches"=>Auth::user()->active_branch,"employees"=>$this->employees, "majors"=>$this->majors , "where_from"=>$where_from,"emp_id"=>$emp_id));
       }
 
       /**
@@ -55,14 +78,22 @@ class salaryController extends Controller
            $employee_major->is_current = $request->is_current == "on"?1:0;
            $employee_major->current_salary = $request->salary;
            $employee_major->employee_code = $code;
+           $employee_major->branch_id = $request->branch_name;
+           $employee_major->currancy = $request->currency;
            $employee_major->user_id = Auth::user()->id;
            $employee_major->save();
            $where_from = $request->where_from;
 
-           if($where_from != "0")
-              return redirect('/'.$where_from.'/create');
+           if($request->ajax())
+           {
+               echo json_encode(array("sucess"=>true));
+               exit();
+           }
 
-           return redirect('/employeemajor')->with("message",trans('app.add_sucessfully'));
+           if($where_from != "0")
+              return redirect('/'.$where_from.'/create'."/".app()->getLocale()."?branch=".$request->query('branch'));
+
+           return redirect('/employeemajor'."/".$request->employee_val."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.add_sucessfully'));
       }
 
       /**
@@ -83,18 +114,16 @@ class salaryController extends Controller
        * @param  int  $id
        * @return \Illuminate\Http\Response
        */
-      public function edit($id)
+      public function edit($id,$emp_id)
       {
           $employee_major = emplyee_major::find($id);
-          $employees = employee::all();
-          $majors = major::all();
-          return view('salaries.update',compact('employee_major','employees','majors'));
+          return view('salaries.update',array("branches"=>Auth::user()->active_branch,"employees"=>$this->employees, "majors"=>$this->majors , "employee_major"=>$employee_major,"emp_id"=>$emp_id));
       }
 
-      public function editcode($id)
+      public function editcode($id,$emp_id)
       {
           $employee_major = emplyee_major::find($id);
-          return view('salaries.updatecode',compact('employee_major'));
+          return view('salaries.updatecode',array('employee_major'=>$employee_major,"emp_id"=>$emp_id));
       }
 
       public function updatecode(employeeMajorCodeRequest $request,$id)
@@ -102,7 +131,7 @@ class salaryController extends Controller
            $employee_major = emplyee_major::find($id);
            $employee_major->employee_code = $request->employee_code;
            $employee_major->save();
-           return redirect('/employeemajor')->with("message",trans('app.update_sucessfully'));
+           return redirect('/employeemajor'."/".$request->employee_val."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
       }
 
 
@@ -119,8 +148,10 @@ class salaryController extends Controller
           $employee_major = emplyee_major::find($id);
           $employee_major->is_current = $request->is_current == "on"?1:0;
           $employee_major->current_salary = $request->salary;
+          $employee_major->branch_id = $request->branch_name;
+          $employee_major->currancy = $request->currency;
           $employee_major->save();
-          return redirect('/employeemajor')->with("message",trans('app.update_sucessfully'));
+          return redirect('/employeemajor'."/".$request->employee_val."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
       }
 
       /**
@@ -139,10 +170,11 @@ class salaryController extends Controller
 
       public function search(Request $request)
       {
-           $emp_id =  $request->employee_val;
-           $employees = employee::all();
-           $employee_major = emplyee_major::where('emplyee_id', '=' , $emp_id)->orderBy("id","desc")->paginate($this->pagination_num);
-           return view('salaries.index',compact('employee_major','employees'));
+           $emp_id = clean($request->employee_val);
+           $query = emplyee_major::where('emplyee_id', '=' , $emp_id);
+           $query = Common::user_filter_by_role($query,false,array(),"");
+           $employee_major = $query->orderBy("id","desc")->paginate($this->pagination_num);
+           return view('salaries.index',array("branches"=>Auth::user()->active_branch,"employee_major"=>$employee_major , "employees"=>$this->employees));
       }
 
 }

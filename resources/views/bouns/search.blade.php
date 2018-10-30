@@ -1,16 +1,18 @@
-<form method="get" action="{{ url('bouns/search') }}" class="form-inline">
+<form method="get" action="{{ url('bouns/search/all') }}/{{app()->getLocale()}}">
     @csrf
-<div class="col-xs-3">
-  <select class="form-control m-input" name="emp_m_id" >
+    <div class="form-group row">
+        <label class="col-sm-3 form-control-label label-sm"> @lang('app.sal_manage_extra_slary')</label>
+        <div class="col-sm-9">
+          <select class="form-control m-input" name="sal_min" >
 
-        @foreach ($employee_major as $key => $empmaj)
-          <option value="{{$empmaj->id}}">	{{App\employee::find($empmaj->emplyee_id)->employee_name}} - {{App\major::find($empmaj->major_id)->title}}</option>
-        @endforeach
-  </select>
-</div>
+            @foreach ($salary_settings as $key => $sett)
+                              <option value="{{$sett->id}}"  >	{{$sett->title}} ( {{$sett->percentage}}% ) </option>
+                            @endforeach
 
-<div class="col-xs-6">
-
-    <button type="submit" class="btnSearchIcon"><i class="fa fa-search"></i></button>
-</div>
+          </select>
+        </div>
+      </div>
+      <input type="hidden" name="branch" value='{{ Request::query("branch") }}'  />
+      <input type="hidden" name="emp_m_id" value="{{$emp_id}}" />
+      <button type="submit" class="btn btn-primary">@lang('app.Search') </button>
 </form>

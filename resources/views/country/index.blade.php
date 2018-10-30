@@ -2,196 +2,179 @@
 
 @section('content')
 
-<!--begin::Portlet-->
-														<div class="m-portlet countryContent">
-															<div class="m-portlet__head">
-																<div class="m-portlet__head-caption">
-																	<div class="m-portlet__head-title titlle">
-																		<h3 class="m-portlet__head-text">
-
-                                      @lang('app.list_of_country')
-																		</h3>
-																	</div>
-																</div>
-															</div>
-
-                                @include("utility.sucess_message")
-
-                                                            <div class="row toolss">
-
-																															<div class="col-xl-6">
-                                                                    <button type="button" class="inputSearchYellow"><i class="fa fa-search"></i> Search</button>
-                                                                </div>
-
-
-                                                                <div class="col-xl-6">
-                                                                    <div class="btnAQ">
-                                                                        <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push toolsmenu" m-dropdown-toggle="hover" aria-expanded="true">
-                                                                      <!--  <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--outline-2x m-btn--air m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle" id="delett">
-                                                                            <i class="la la-plus m--hide"></i>
-                                                                            <i class="la la-ellipsis-h"></i>
-                                                                        </a>
-																																			-->
-                                                                        <div class="m-dropdown__wrapper ">
-                                                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                                                            <div class="m-dropdown__inner deleteAllItem">
-                                                                                <div class="m-dropdown__body deletebody">
-                                                                                    <div class="m-dropdown__content">
-                                                                                        <ul class="m-nav">
-                                                                                            <li class="m-nav__section m-nav__section--first m--hide">
-                                                                                                <span class="m-nav__section-text">
-                                                                                                    Quick Actions
-                                                                                                </span>
-                                                                                            </li>
-                                                                                            <li class="m-nav__item">
-                                                                                                <a href="" class="m-nav__link">
-                                                                                                    <span class="m-nav__link-text">
-                                                                                                        <i class="la la-trash"></i> Delete All
-                                                                                                    </span>
-                                                                                                </a>
-                                                                                            </li>
-
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                        <a href="{{ url('country/create/0') }}">
-                                                                            <button type="button" class="btnNew"><i class="fa fa-plus"></i>@lang('app.new_country')</button>
-                                                                        </a>
-                                                                </div>
-                                                                </div>
-
-
-																																<div class="row advancedSearch">
-																																	 @include("country.search")
-																										         	</div>
-
-
-                                                            </div>
-                                                            <div class="row dataTables">
-                                                                <table class="table table-striped m-table">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <th>
-
-                                                                        </th>
-                                                                        <th>
-                                                                          @lang('app.country_name')
-                                                                        </th>
-
-
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
-
-                                                                        @foreach ($countries as $key => $country)
-
-																																				<tr>
-																																						<th scope="row">
-
-
-																																						</th>
-
-																																						<td>
-																																								{{$country->title}}
-																																						</td>
-
-
-																																						<td>
-
-																																						</td>
-																																						<td>
-																																							<a href="#" class="deleted_btn" data-title="{{$country->id}}">	<i class="la la-trash"></i> </a>
-
-																																							<a href='{{url("country/{$country->id}/edit")}}'>	<i class="la la-edit"></i></a>
-																																							<a href='{{url("country/{$country->id}/show")}}'>	<i class="la la-eye" data-toggle="modal" data-target="#m_modal_6"></i></a>
 
 
 
-																																						</td>
+							<section id="add-form" class="search_switch_form">
+																								 <div class="container-fluid">
+																										 <div class="row align-items-center justify-content-center">
+																												 <div class="card col-lg-12 padding20">
+																													 <div class="row">
+																													 <div class="col-lg-6">
+																																 <label class=" form-control-label"><i class="far fa-plus-square"></i> @lang('app.add_new_country')</label>
+																															 </div>
+																															 </div>
+																															 <div class="row">
+																																 <div class="col-lg-12 mg-top25">
+																																		  @include("country.sub_add")
 
-																																				</tr>
+																																			 </div>
+																																		 </div>
 
+																												 </div>
+																										 </div>
+																								 </div>
+							  </section>
 
+								<section id="add-form" class="search_switch_form">
+												<div class="container-fluid">
+														<div class="row align-items-center justify-content-center">
+																	<div class="card col-lg-12 padding20">
+																			<div class="row">
+																					<div class="col-lg-6">
+																								<label class=" form-control-label"><i class="far fa-plus-square"></i>@lang('app.add_new_city')</label>
+																					 </div>
+																			</div>
+																			<div class="row">
+																					 <div class="col-lg-12 mg-top25">
+																								@include("city.add_sub")
+																					  </div>
+																			</div>
 
-                                                                        @endforeach
-
-
-
-                                                                </tbody>
-                                                                </table>
-
-                                                            </div>
-
-                                                      {{$countries->links('vendor.pagination.default')}}
-
-
+																	 </div>
 														</div>
-														<!--end::Portlet-->
+												</div>
+							  </section>
+
+               	<section id="add-form" class="search_switch_form">
+																									 <div class="container-fluid">
+																											 <div class="row align-items-center justify-content-center">
+																													 <div class="card col-lg-12 padding20">
+																														 <div class="row">
+																														 <div class="col-lg-6">
+																																	 <label class=" form-control-label"><i class="fa fa-search" aria-hidden="true"></i> @lang('app.Search')</label>
+																																 </div>
+																																 </div>
+																																 <div class="row">
+																																	 <div class="col-lg-12 mg-top25">
+																																		  @include("country.search")
+
+																																				 </div>
+																																			 </div>
+
+																													 </div>
+																											 </div>
+																									 </div>
+								</section>
 
 
-														<script type="text/javascript">
-															 $(".deleted_btn").on("click",function(){
-
-																 var id = $(this).attr("data-title");
-																 var url_delete = '{{url("country/index")}}'+"/"+id
-																					$.ajax({url: url_delete , success: function(result){
-
-																						   result = JSON.parse(result);
-																						   console.log(result);
-																							 if(result.sucess)
-																							 {
-																								   window.location.href = '{{url("/country")}}';
-																							 }
-																						}});
-
-																 })
 
 
+							 <section id="add-table">
+								 <div class="container-fluid">
+									 <div class="row align-items-center justify-content-center">
+											 <div class="card col-lg-12 custyle">
+												 <div class="row">
+													 <div class="col-lg-12 mg-top25">
+														 <label class="form-control-label"><i class="fas fa-cog"></i> @lang('app.list_of_country')</label>
+													<!--	 <a href="{{url('/country')}}/create/0/{{app()->getLocale()}}?branch={{ Request::query('branch') }}"  style="display:inline">
+														     <button type="button" class="btn btn-primary"><i class="fas fa-plus" style="margin-right: 6px;"></i>@lang('app.new_country')</button>
+													   </a>
+                          -->
+													<!--	 <a href="#" class="switcher_button" id="search_switch_button" style="display:none">
+														     <button type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true" style="margin-right: 6px;"></i>@lang('app.Search')</button>
+													   </a>
+													 -->
+													 </div>
+												 </div>
+												 @include("utility.sucess_message")
+												 <table class="table table-striped custab">
 
-														</script>
+													 <thead>
+														 <tr>
+															 <th scope="col">  @lang('app.country_name')</th>
+															 <th scope="col"></th>
+
+														 </tr>
+													 </thead>
+													 <tbody>
+
+                             @foreach ($countries as $key => $country)
+
+														 <tr>
+															 <td data-label="@lang('app.country_name')">{{clean($country->title)}}</td>
+
+															 <td class="text-center">
+																 <a class='btn btn-info btn-xs' href='{{url("country/{$country->id}/edit")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}'>
+																	 <i class="far fa-edit"></i>
+																 </a>
+																 <a href="#" class="btn btn-danger btn-xs deleted_btn"  data-title="{{$country->id}}">
+																	 <i class="far fa-trash-alt"></i>
+																 </a>
+																 @if(Auth::user()->AllowToPath("manage_city"))
+																	 <a class="btn btn-info btn-xs" href="{{url('/city')}}/{{$country->id}}/{{app()->getLocale()}}?branch={{ Request::query('branch') }}">
+																		@lang('app.list_of_city')
+																	</a>
+																 @endif
+															 </td>
+														 </tr>
+														   @endforeach
+
+
+
+													 </tbody>
+												 </table>
+
+													  {{$countries->links('vendor.pagination.default')}}
+													 </div>
+									 </div>
+								 </div>
+							 </section>
 
 @endsection
 
 
-@section('subhead')
+@section('footerjscontent')
 
-<!-- BEGIN: Subheader -->
-								<div class="m-subheader ">
-									<div class="d-flex align-items-center">
-										<div class="mr-auto">
-											<h3 class="m-subheader__title m-subheader__title--separator">
-												@lang('app.list_of_country')
-											</h3>
-											<ul class="m-subheader__breadcrumbs m-nav m-nav--inline">
-												<li class="m-nav__item m-nav__item--home">
-													<a href="#" class="m-nav__link m-nav__link--icon">
-														<i class="m-nav__link-icon la la-home"></i>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
-												<li class="m-nav__item">
-													<a href='{{url("/country")}}'  class="m-nav__link">
-														<span class="m-nav__link-text">
-															@lang('app.country')
-														</span>
-													</a>
-												</li>
-												<li class="m-nav__separator">
-													-
-												</li>
+<script type="text/javascript">
+							 $(".deleted_btn").on("click",function(){
 
-											</ul>
-										</div>
-										<div>
+								 var id = $(this).attr("data-title");
+								 var url_delete = '{{url("country/index")}}'+"/"+id+'/{{app()->getLocale()}}'
+													$.ajax({url: url_delete , success: function(result){
 
-										</div>
-									</div>
-								</div>
-								<!-- END: Subheader -->
+															 result = JSON.parse(result);
+															 console.log(result);
+															 if(result.sucess)
+															 {
+																	 window.location.href = '{{url("/country")}}/{{app()->getLocale()}}?branch={{ Request::query("branch") }}';
+															 }
+														}});
+
+								 });
+
+								 $(".switcher_button").on("click",function()
+							   {
+                       var id = $(this).attr("id");
+											 if(id =="add_switch_button")
+											 {
+												  $("#search_switch_button").css("display","inline");
+													$(".add_switch_form").css("display","block");
+													$(".search_switch_form").css("display","none");
+
+											 }
+											 else {
+											 	  $("#add_switch_button").css("display","inline");
+													$(".add_switch_form").css("display","none");
+													$(".search_switch_form").css("display","block");
+											 }
+
+											 $(this).css("display","none");
+
+							   });
+
+
+
+						</script>
 
 @endsection

@@ -13,7 +13,7 @@ class employee extends Model
 
     public function emplyee_majar_data()
     {
-        return $this->hasMany('App\emplyee_major');
+        return $this->hasMany('App\emplyee_major','emplyee_id');
     }
 
     public function accounts()
@@ -24,6 +24,9 @@ class employee extends Model
     {
        return $this->hasMany('App\transaction');
     }
-
+    public function users()
+    {
+        return $this->belongsTo('App\User',"user_id");
+    }
 
 }

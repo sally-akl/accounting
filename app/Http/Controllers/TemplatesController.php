@@ -8,7 +8,7 @@ use App\templates;
 class TemplatesController extends Controller
 {
 
-    protected $pagination_num = 10;
+    protected $pagination_num = 5;
     public function index()
     {
         $templates = templates::orderBy("id","desc")->paginate($this->pagination_num);
@@ -27,7 +27,7 @@ class TemplatesController extends Controller
         $template->title = $request->title;
         $template->content = $request->body;
         $template->save();
-        return redirect('/templates')->with("message",trans('app.update_sucessfully'));
+        return redirect('/templates'."/".app()->getLocale()."?branch=".$request->query('branch'))->with("message",trans('app.update_sucessfully'));
     }
 
 }
